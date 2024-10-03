@@ -1,0 +1,45 @@
+<div class="modal">
+  <div class="modal-header">
+    <h2 class="route-code">
+      <i class="icon-bus"></i>
+      {{ ruta.codigo }}
+    </h2>
+    <button (click)="cerrarDetalle()" class="modal-close">
+      <i class="icon-close"></i>
+    </button>
+  </div>
+
+  <div class="modal-content">
+    <div class="schedule">
+      <i class="icon-clock"></i>
+      <span>{{ ruta.horario.dia }}, {{ ruta.horario.horaInicio }} - {{ ruta.horario.horaFin }}</span>
+    </div>
+
+    <div class="section">
+      <h3><i class="icon-map-pin"></i> Paradas:</h3>
+      <ul>
+        <li *ngFor="let estacion of ruta.estaciones">{{ estacion.nombre }}</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3><i class="icon-bus"></i> Buses Asignados:</h3>
+      <ul>
+        <li *ngFor="let bus of ruta.buses">{{ bus.modelo }} - {{ bus.placa }}</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3><i class="icon-user"></i> Conductores Asignados:</h3>
+      <ul>
+        <li *ngFor="let conductor of ruta.conductores">{{ conductor.nombre }} {{ conductor.apellido }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="p-d-flex p-jc-end p-p-4">
+    <p-button label="Editar Ruta" icon="pi pi-pencil" styleClass="p-button-raised p-button-rounded">
+      <a [routerLink]="['/r-editar-ruta']">Editar</a>
+    </p-button>
+  </div>
+</div>

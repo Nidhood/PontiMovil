@@ -1,0 +1,17 @@
+<div class="edit-route-container">
+  <h2>Editar Ruta</h2>
+
+  <div class="form-group">
+    <label for="rutaNombre">Nombre de la Ruta:</label>
+    <input id="rutaNombre" [(ngModel)]="ruta.nombre" type="text" pInputText>
+  </div>
+
+  <div class="stations-container">
+
+  </div>
+
+  <div class="button-container">
+    <p-button label="Guardar Cambios" icon="pi pi-check" (onClick)="guardarCambios()"></p-button>
+    <p-button label="Cancelar" icon="pi pi-times" (onClick)="cancelarEdicion()" styleClass="p-button-secondary p-ml-2"></p-button>
+  </div>
+</div>

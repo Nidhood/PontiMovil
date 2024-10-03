@@ -1,0 +1,33 @@
+/* route-edit.component.css */
+.edit-route-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.stations-container {
+  margin-bottom: 20px;
+}
+
+.station-item {
+  padding: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Ajustes para p-pickList */
+::ng-deep .p-picklist-list {
+  min-height: 300px;
+}
+
+::ng-deep .p-picklist-item {
+  padding: 0.5rem;
+}
