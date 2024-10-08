@@ -1,0 +1,21 @@
+<div class="edit-modal">
+  <div class="modal-header">
+    <h2>Agregar Bus</h2>
+    <button class="close-button" (click)="cancelar()">×</button>
+  </div>
+
+  <div class="form-group">
+    <label for="placa">Placa</label>
+    <input pInputText id="placa" class="p-inputtext full-width" [(ngModel)]="bus.placa" placeholder="Ingrese la placa del bus"/>
+  </div>
+
+  <div class="form-group">
+    <label for="modelo">Modelo</label>
+    <input pInputText id="modelo" class="p-inputtext full-width" [(ngModel)]="bus.modelo" placeholder="Ingrese el modelo del bus"/>
+  </div>
+
+  <div class="action-buttons">
+    <button class="p-button p-button-success" (click)="guardarBus()">Guardar</button>
+    <button class="p-button p-button-secondary" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="modulo-bus agregar-bus" (click)="abrirFormulario()">
+  <i class="pi pi-plus icono-agregar"></i>
+</div>
+
+<!-- Dialogo de PrimeNG -->
+<p-dialog header="Agregar Bus" [(visible)]="displayModal" [modal]="true" [draggable]="false" [closable]="false" [responsive]="true" [style]="{width: '400px'}" [baseZIndex]="10000">
+  <div class="p-fluid">
+    <!-- Campo de entrada para la placa -->
+    <div class="p-field">
+      <label for="placa">Placa</label>
+      <input id="placa" type="text" pInputText [(ngModel)]="busData.placa" placeholder="Ingrese la placa del bus" />
+    </div>
+
+    <!-- Campo de entrada para el modelo -->
+    <div class="p-field">
+      <label for="modelo">Modelo</label>
+      <input id="modelo" type="text" pInputText [(ngModel)]="busData.modelo" placeholder="Ingrese el modelo del bus" />
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <p-footer>
+    <button pButton label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarBus()"></button>
+    <button pButton label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="cerrarFormulario()"></button>
+  </p-footer>
+</p-dialog>

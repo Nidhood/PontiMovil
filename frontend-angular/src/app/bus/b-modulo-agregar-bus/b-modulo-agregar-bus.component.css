@@ -1,0 +1,31 @@
+.agregar-bus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  border: 2px dashed gray;
+  border-radius: 0.5rem;
+  height: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: gray;
+}
+
+.agregar-bus:hover {
+  background-color: #f5f5f5;
+  border-color: #b91c1c;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-0.25rem) scale(1.02) translateZ(0) !important;
+  color: #b91c1c;
+
+  .icono-agregar {
+    color: #b91c1c;
+  }
+}
+
+.icono-agregar {
+  font-size: 2rem;
+  color: gray;
+  margin-right: 0.5rem;
+}

@@ -1,0 +1,57 @@
+<div class="edit-modal">
+  <div class="modal-header">
+    <h2>Editar Bus {{ bus.placa }}</h2>
+    <button class="close-button" (click)="closeEdit()">×</button>
+  </div>
+
+  <div class="form-section">
+    <div class="stations-container">
+      <div class="form-group">
+        <label for="placa">Placa</label>
+        <input id="placa" class="full-width" [(ngModel)]="bus.placa" placeholder="Ingrese la placa del bus" />
+      </div>
+
+      <div class="form-group">
+        <label for="modelo">Modelo</label>
+        <input id="modelo" class="full-width" [(ngModel)]="bus.modelo" placeholder="Ingrese el modelo del bus" />
+      </div>
+    </div>
+  </div>
+
+  <div class="stations-container">
+    <div class="station-list">
+      <h3>Rutas Asignadas</h3>
+      <p-pickList
+        [source]="rutasNoAsignadas"
+        [target]="rutasAsignadas"
+        sourceHeader="Rutas No Asignadas"
+        targetHeader="Rutas Asignadas"
+        (onMoveToTarget)="onMoveToTarget($event)"
+        (onMoveToSource)="onMoveToSource($event)">
+        <ng-template let-ruta pTemplate="item">
+          {{ ruta.codigo }}
+        </ng-template>
+      </p-pickList>
+    </div>
+
+    <div class="station-list">
+      <h3>Conductores Asignados</h3>
+      <p-pickList
+        [source]="conductoresNoAsignados"
+        [target]="conductoresAsignados"
+        sourceHeader="Conductores No Asignados"
+        targetHeader="Conductores Asignados"
+        (onMoveToTarget)="onMoveToTarget($event)"
+        (onMoveToSource)="onMoveToSource($event)">
+        <ng-template let-conductor pTemplate="item">
+          {{ conductor.nombre }} {{ conductor.apellido }}
+        </ng-template>
+      </p-pickList>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <button class="p-button p-button-success" (click)="saveChanges()">Guardar</button>
+    <button class="p-button p-button-secondary" (click)="closeEdit()">Cancelar</button>
+  </div>
+</div>

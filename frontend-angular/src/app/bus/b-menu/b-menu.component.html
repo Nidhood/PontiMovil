@@ -1,0 +1,48 @@
+<div class="seccion">
+  <h1>Gestión de Buses</h1>
+  <div class="container">
+    <div class="nav-style">
+      <!-- Buscador de buses -->
+      <app-b-buscar-bus (search)="onSearch($event)"></app-b-buscar-bus>
+    </div>
+
+    <!-- Animación de carga -->
+    <div *ngIf="isLoading" class="loading-animation">
+      <ng-lottie [options]="options"></ng-lottie>
+    </div>
+
+    <div *ngIf="!isLoading" class="grid">
+      <!-- Tabla de buses utilizando PrimeNG -->
+      <p-table [value]="(buses$ | async) ?? []" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Placa</th>
+            <th>Modelo</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-bus>
+          <tr>
+            <td>{{ bus?.placa }}</td>
+            <td>{{ bus?.modelo }}</td>
+            <td>
+              <button pButton label="Detalles" icon="pi pi-info" class="p-button-text" (click)="seleccionarBus(bus)"></button>
+              <button pButton label="Editar" icon="pi pi-pencil" class="p-button-text" (click)="editarBus()"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Botón para agregar nuevo bus -->
+      <app-b-modulo-agregar-bus (click)="abrirFormulario()"></app-b-modulo-agregar-bus>
+    </div>
+
+    <!-- Detalles del bus seleccionado -->
+    <app-b-detalles-bus *ngIf="selectedBus" [bus]="selectedBus" (close)="cerrarDetalles()" (edit)="editarBus()"></app-b-detalles-bus>
+
+    <!-- Edición del bus seleccionado -->
+    <app-b-editar-bus *ngIf="editBus" [bus]="editBus" (close)="cerrarEditar()" (save)="guardarCambiosBus($event)"></app-b-editar-bus>
+
+  </div>
+</div>

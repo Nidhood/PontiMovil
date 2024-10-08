@@ -1,0 +1,8 @@
+<div class="flex-container">
+  <input type="text" placeholder="Buscar bus por placa o modelo" [(ngModel)]="searchTerm"/>
+  <button (click)="onSearch()" (mouseenter)="startAnimation()" (mouseleave)="completeAnimation()">
+    <div class="loading-animation">
+      <ng-lottie [options]="options" (animationCreated)="animationCreated($event)"></ng-lottie>Buscar
+    </div>
+  </button>
+</div>

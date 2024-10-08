@@ -1,0 +1,17 @@
+<div class="card" (click)="seleccionarBus()">
+  <div class="card-header">
+    <h2>{{ bus.placa }}</h2> <!-- Mostramos la placa del bus -->
+  </div>
+  <div class="card-content">
+    <p>{{ bus.modelo }}</p> <!-- Mostramos el modelo del bus -->
+
+    <!-- Mostramos las rutas asignadas -->
+    <div *ngIf="bus.rutas.length > 0">
+      <i class="pi pi-map-marker"></i>
+      <span> Rutas asignadas: </span>
+      <ul>
+        <li *ngFor="let ruta of bus.rutas">{{ ruta.codigo }}</li> <!-- Listamos las rutas asignadas -->
+      </ul>
+    </div>
+  </div>
+</div>

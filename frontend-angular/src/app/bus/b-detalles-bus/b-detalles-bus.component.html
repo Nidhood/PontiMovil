@@ -1,0 +1,29 @@
+<div class="modal">
+  <div class="modal-header">
+    <h2 class="bus-placa">
+      <i class="icon-bus"></i>
+      {{ bus?.placa }} - {{ bus?.modelo }}
+    </h2>
+    <button class="modal-close" (click)="cerrarDetalle()">×</button>
+  </div>
+
+  <div class="modal-content">
+    <div class="section">
+      <h3><i class="icon-user"></i> Conductores Asignados:</h3>
+      <ul>
+        <li *ngFor="let conductor of bus?.conductores">{{ conductor.nombre }} {{ conductor.apellido }}</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3><i class="icon-bus"></i> Rutas Asignadas:</h3>
+      <ul>
+        <li *ngFor="let ruta of bus?.rutas">{{ ruta.codigo }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="edit-btn">
+    <button class="p-button p-button-secondary" (click)="editarBus()">Editar</button>
+  </div>
+</div>
