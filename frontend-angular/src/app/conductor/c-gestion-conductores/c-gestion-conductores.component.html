@@ -1,0 +1,33 @@
+<h1 class="titulo">Gestionar Conductores</h1>
+<button class="btnNuevo" routerLink="/conductores/crear">Nuevo conductor +</button>
+
+<table class="entity-list">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Cédula</th>
+      <th>Teléfono</th>
+      <th>Editar buses</th>
+      <th>Editar conductor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let conductor of conductores">
+      <tr *ngIf="conductor.nombre">
+        <td>{{ conductor.nombre }}</td>
+        <td>{{ conductor.apellido }}</td>
+        <td>{{ conductor.cedula }}</td>
+        <td>{{ conductor.telefono }}</td>
+        <td>
+          <a class="Editar" [routerLink]="['/asignaciones', conductor.id, 'editar']">Editar buses</a>
+        </td>
+        <td>
+          <a class="Editar" [routerLink]="['/conductores', conductor.id, 'editar']">Editar</a>
+          <a class="Eliminar" href="#" (click)="eliminarConductor(conductor.id)" 
+             onclick="return confirm('¿Está seguro que desea eliminar este conductor?')">Eliminar</a>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>

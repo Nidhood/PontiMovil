@@ -6,6 +6,9 @@ import {ErrorComponent} from './error/error.component';
 import {RMenuComponent} from './ruta/r-menu/r-menu.component';
 import {HSelectFunctionComponent} from './home/h-select-function/h-select-function.component';
 import {REditarRutaComponent} from './ruta/r-editar-ruta/r-editar-ruta.component';
+import { CGestionConductoresComponent } from './conductor/c-gestion-conductores/c-gestion-conductores.component';
+import { CEditarConductorComponent } from './conductor/c-editar-conductor/c-editar-conductor.component';
+import { CCrearConductorComponent } from './conductor/c-crear-conductor/c-crear-conductor.component';
 
 export const routes: Routes = [
   { path: '', component: HIndexComponent },
@@ -14,5 +17,8 @@ export const routes: Routes = [
   { path: 'r-menu', component: RMenuComponent },
   { path: 'h-select-function', component: HSelectFunctionComponent },
   {path:  'r-editar-ruta', component: REditarRutaComponent},
+  {path: 'c-gestion-conductores', component: CGestionConductoresComponent},
+  {path: 'c-editar-conductor', component: CEditarConductorComponent},
+  {path: 'c-crear-conductor', component: CCrearConductorComponent},
   { path: '**', component: ErrorComponent }
 ];
