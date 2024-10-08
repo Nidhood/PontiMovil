@@ -1,4 +1,4 @@
-package com.javeriana.pontimovil.ponti_movil.dto.pasajero;
+package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta;
 
 import lombok.*;
 import java.io.Serializable;
@@ -10,7 +10,6 @@ import java.time.LocalTime;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class HorarioDTO implements Serializable {
-    String dia;
     LocalTime horaInicio;
     LocalTime horaFin;
 }

@@ -1,0 +1,25 @@
+.estacion-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.estacion-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+.estacion-nombre {
+  font-weight: bold;
+}
+.estacion-codigo {
+  color: #666;
+}
+.estacion-detalles {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+}
+.estacion-tipo, .estacion-zona {
+  color: #888;
+}

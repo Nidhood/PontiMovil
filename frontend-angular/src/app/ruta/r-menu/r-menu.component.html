@@ -17,16 +17,28 @@
 
       <!-- desplegamos las rutas -->
       <app-r-modulo-ruta *ngFor="let ruta of rutas$ | async" [ruta]="ruta" (rutaSelected)="seleccionarRuta($event)"></app-r-modulo-ruta>
+
+      <!-- desplegamos el formulario para agregar una nueva ruta -->
+      <app-r-modulo-agregar-ruta (click)="abrirFormulario()"></app-r-modulo-agregar-ruta>
     </div>
 
-    <div *ngIf="selectedRuta || guiaVisible" class="modal-backdrop" (click)="cerrarModal()"></div>
+    <!-- condición para opacar el fondo mientras se despliega un modal -->
+    <div *ngIf="selectedRuta || guiaVisible || editRuta" class="modal-backdrop" (click)="cerrarModal()"></div>
 
-    <app-r-detalles-ruta *ngIf="selectedRuta" [ruta]="selectedRuta" (close)="cerrarDetalles()"></app-r-detalles-ruta>
+    <!-- desplegamos los detalles de la ruta seleccionada -->
+    <app-r-detalles-ruta *ngIf="selectedRuta" [ruta]="selectedRuta" (close)="cerrarDetalles()" (edit)="editarRuta()"></app-r-detalles-ruta>
+
+    <!-- desplegamos la edición de la ruta seleccionada -->
+    <app-r-editar-ruta *ngIf="editRuta" [ruta]="editRuta" (close)="cerrarEditar()" (save)="guardarCambiosRuta($event)"></app-r-editar-ruta>
+
+    <!-- desplegamos la creación de una nueva ruta -->
+    <app-r-agregar-ruta *ngIf="agregarRuta" (close)="cerrarAgregar()" (save)="guardarNuevaRuta($event)"></app-r-agregar-ruta>
+
+    <!-- desplegamos la guía de rutas -->
     <div *ngIf="guiaVisible" class="modal guia-modal">
-      <button (click)="cerrarGuia()" class="modal-close">
-        <i class="icon-close"></i>
-      </button>
+      <p-button icon="pi pi-times" severity="danger" (click)="cerrarGuia()"></p-button>
       <img ngSrc="./assets/images/rutasTransmi.png" alt="Rutas TransMilenio" height="880" width="1070">
     </div>
+
   </div>
 </div>

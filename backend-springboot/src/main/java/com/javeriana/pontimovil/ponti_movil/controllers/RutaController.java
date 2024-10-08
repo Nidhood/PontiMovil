@@ -1,6 +1,6 @@
 package com.javeriana.pontimovil.ponti_movil.controllers;
 
-import com.javeriana.pontimovil.ponti_movil.dto.pasajero.RutaDTO;
+import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta.RutaDTO;
 import com.javeriana.pontimovil.ponti_movil.entities.Ruta;
 import com.javeriana.pontimovil.ponti_movil.entities.RutaEstacion;
 import com.javeriana.pontimovil.ponti_movil.services.RutaService;
@@ -28,9 +28,9 @@ public class RutaController {
         return rutaService.obtenerRutas();
     }
 
-    @GetMapping("/diasSemana")
-    public List<RutaDTO> obtenerRutasPorDiasSemana(){
-        return rutaService.obtenerRutasPorDiasSemana();
+    @GetMapping("/detalladas")
+    public List<RutaDTO> obtenerRutasDetalladas(){
+        return rutaService.obtenerRutasDetalladas();
     }
 
     @GetMapping("/{id}")
@@ -49,7 +49,7 @@ public class RutaController {
     }
 
     @PostMapping("/{id}/actualizar")
-    public void actualizarRuta(@PathVariable UUID id, @RequestBody Ruta ruta) {
+    public void actualizarRuta(@PathVariable UUID id, @RequestBody RutaDTO ruta) {
         rutaService.actualizarRuta(id, ruta);
     }
 

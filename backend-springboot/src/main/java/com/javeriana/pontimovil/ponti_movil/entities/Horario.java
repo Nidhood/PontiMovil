@@ -20,9 +20,6 @@ public class Horario {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "dia", nullable = false, length = 20)
-    private String dia;
-
     @Column(name = "hora_inicio", nullable = false)
     private LocalTime horaInicio;
 
@@ -32,8 +29,7 @@ public class Horario {
     // Constructores:
     public Horario() {}
 
-    public Horario(String dia, LocalTime horaInicio, LocalTime horaFin) {
-        this.dia = dia;
+    public Horario(LocalTime horaInicio, LocalTime horaFin) {
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
     }
@@ -44,19 +40,18 @@ public class Horario {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Horario horario = (Horario) o;
-        return Objects.equals(getId(), horario.getId()) && Objects.equals(getDia(), horario.getDia()) && Objects.equals(getHoraInicio(), horario.getHoraInicio()) && Objects.equals(getHoraFin(), horario.getHoraFin());
+        return Objects.equals(getId(), horario.getId()) && Objects.equals(getHoraInicio(), horario.getHoraInicio()) && Objects.equals(getHoraFin(), horario.getHoraFin());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDia(), getHoraInicio(), getHoraFin());
+        return Objects.hash(getId(), getHoraInicio(), getHoraFin());
     }
 
     @Override
     public String toString() {
         return "Horario{" +
                 "id=" + id +
-                ", dia='" + dia + '\'' +
                 ", horaInicio=" + horaInicio +
                 ", horaFin=" + horaFin +
                 '}';

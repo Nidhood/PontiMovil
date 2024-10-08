@@ -4,16 +4,22 @@
       <i class="icon-bus"></i>
       {{ ruta.codigo }}
     </h2>
-    <button (click)="cerrarDetalle()" class="modal-close">
-      <i class="icon-close"></i>
-    </button>
+    <p-button icon="pi pi-times" severity="danger" (click)="cerrarDetalle()"></p-button>
   </div>
 
   <div class="modal-content">
     <div class="schedule">
       <i class="icon-clock"></i>
-      <span>{{ ruta.horario.dia }}, {{ ruta.horario.horaInicio }} - {{ ruta.horario.horaFin }}</span>
+      <span>{{ formatDate(horaInicioDate) }} - {{ formatDate(horaFinDate) }}</span>
     </div>
+
+    <div class="section">
+      <h3><i class="pi pi-calendar"></i> Dias de la semana:</h3>
+      <ul>
+        <li *ngFor="let dia of ruta.diasSemana">{{ dia }}</li>
+      </ul>
+    </div>
+
 
     <div class="section">
       <h3><i class="icon-map-pin"></i> Paradas:</h3>
@@ -36,10 +42,9 @@
       </ul>
     </div>
   </div>
-
-  <div class="p-d-flex p-jc-end p-p-4">
-    <p-button label="Editar Ruta" icon="pi pi-pencil" styleClass="p-button-raised p-button-rounded">
-      <a [routerLink]="['/r-editar-ruta']">Editar</a>
+  <div class="edit-btn">
+    <p-button  severity="secondary"  (click)="editarRuta()">
+      <i class="pi pi-cog" style="font-size: 1rem"></i>
     </p-button>
   </div>
 </div>

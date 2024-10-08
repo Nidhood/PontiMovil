@@ -14,4 +14,5 @@ public interface RutaEstacionRepository extends JpaRepository<RutaEstacion, Ruta
   void deleteByRuta(Ruta ruta);
   RutaEstacion findByRutaIdAndEstacionId(UUID idRuta, UUID idEstacion);
   List<RutaEstacion> findByRuta(Ruta ruta);
+  Boolean existsByRutaIdAndEstacionId(UUID idRuta, UUID idEstacion);
 }

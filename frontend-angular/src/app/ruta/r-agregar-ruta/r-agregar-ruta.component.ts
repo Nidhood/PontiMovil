@@ -1,40 +1,37 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormsModule} from '@angular/forms';
 import {Button} from 'primeng/button';
-import {RModuloEstacionComponent} from '../r-modulo-estacion/r-modulo-estacion.component';
-import {GestionarRutasService} from '../../share/gestionar-rutas.service';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {RutaDto} from '../../dto/gestionar-rutas/ruta/ruta-dto';
-import {EstacionDTO} from '../../dto/gestionar-rutas/estacion/estacion-dto';
-import {CdkDropList} from '@angular/cdk/drag-drop';
-import {NgForOf, NgIf} from '@angular/common';
 import {CalendarModule} from 'primeng/calendar';
-import {ChipsModule} from 'primeng/chips';
-import {PickListModule} from 'primeng/picklist';
-import {HorarioDTO} from '../../dto/gestionar-rutas/ruta/horario-dto';
+import {InputTextModule} from 'primeng/inputtext';
 import {MultiSelectModule} from 'primeng/multiselect';
+import {NgIf} from '@angular/common';
+import {PaginatorModule} from 'primeng/paginator';
+import {PickListModule} from 'primeng/picklist';
+import {PrimeTemplate} from 'primeng/api';
+import {RModuloEstacionComponent} from '../r-modulo-estacion/r-modulo-estacion.component';
+import {RutaDto} from '../../dto/gestionar-rutas/ruta/ruta-dto';
+import {HorarioDTO} from '../../dto/gestionar-rutas/ruta/horario-dto';
+import {EstacionDTO} from '../../dto/gestionar-rutas/estacion/estacion-dto';
+import {GestionarRutasService} from '../../share/gestionar-rutas.service';
 
 @Component({
-  selector: 'app-r-editar-ruta',
+  selector: 'app-r-agregar-ruta',
   standalone: true,
   imports: [
-    FormsModule,
     Button,
-    RModuloEstacionComponent,
-    ConfirmDialogModule,
-    CdkDropList,
-    NgForOf,
-    NgIf,
     CalendarModule,
-    ChipsModule,
+    InputTextModule,
+    MultiSelectModule,
+    NgIf,
+    PaginatorModule,
     PickListModule,
-    MultiSelectModule
+    PrimeTemplate,
+    RModuloEstacionComponent
   ],
-  templateUrl: './r-editar-ruta.component.html',
-  styleUrl: './r-editar-ruta.component.css'
+  templateUrl: './r-agregar-ruta.component.html',
+  styleUrl: './r-agregar-ruta.component.css'
 })
+export class RAgregarRutaComponent {
 
-export class REditarRutaComponent {
   @Input() ruta: RutaDto = new RutaDto(
     '', // id
     '', // código

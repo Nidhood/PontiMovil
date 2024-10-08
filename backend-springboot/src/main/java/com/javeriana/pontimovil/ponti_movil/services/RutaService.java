@@ -1,6 +1,6 @@
 package com.javeriana.pontimovil.ponti_movil.services;
 
-import com.javeriana.pontimovil.ponti_movil.dto.pasajero.*;
+import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta.*;
 import com.javeriana.pontimovil.ponti_movil.entities.*;
 import com.javeriana.pontimovil.ponti_movil.exceptions.RutaNotFoundException;
 import com.javeriana.pontimovil.ponti_movil.repositories.AsignacionRepository;
@@ -15,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class RutaService {
@@ -46,7 +45,7 @@ public class RutaService {
         return rutaEstacionRepository.findByRuta(rutaRepository.findById(id).orElseThrow(()-> new RutaNotFoundException(id)));
     }
 
-    public List<RutaDTO> obtenerRutasPorDiasSemana(){
+    public List<RutaDTO> obtenerRutasDetalladas(){
         List<RutaDTO> rutas = new ArrayList<>();
 
         // Obtenemos todas las rutas:
@@ -57,6 +56,9 @@ public class RutaService {
 
             // Obtenemos el  horario asociado a la ruta con el nuevo formato DTO:
             HorarioDTO horario = maptToHorarioDTO(ruta.getHorario());
+
+            // Obtenemos los días de la semana asociados a la ruta:
+            List<String> diasSemana = mapToDiasSemana(asignacionRepository.findByRutaId(ruta.getId()));
 
             // Obtenemos las estaciones asociadas a la ruta:
             List<EstacionDTO> estaciones = mapToEstacionDTO(rutaEstacionRepository.findByRuta(ruta).stream().map(RutaEstacion::getEstacion).toList());
@@ -69,8 +71,10 @@ public class RutaService {
 
             // Creamos el nuevo DTO:
             RutaDTO rutaDTO = new RutaDTO(
+                    ruta.getId(),
                     ruta.getCodigo(),
                     horario,
+                    diasSemana,
                     estaciones,
                     buses,
                     conductores
@@ -88,7 +92,6 @@ public class RutaService {
 
         // Mapeamos los conductores en el nuevo formato DTO:
         return new HorarioDTO(
-                horario.getDia(),
                 horario.getHoraInicio(),
                 horario.getHoraFin()
                 );
@@ -123,6 +126,12 @@ public class RutaService {
         ).toList();
     }
 
+    public List<String> mapToDiasSemana(List<Asignacion> asignaciones) {
+
+        // Mapeamos los conductores en el nuevo formato DTO:
+        return asignaciones.stream().map(Asignacion::getDiaSemana).toList();
+    }
+
     public Ruta obtenerRutaPorId(UUID id) {
         return rutaRepository.findById(id).orElseThrow(()-> new RutaNotFoundException(id));
     }
@@ -131,7 +140,7 @@ public class RutaService {
 
         // Buscamos si el horario ya existe, si no lo creamos:
         if (ruta.getHorario().getId() == null) {
-            Horario horario = new Horario(ruta.getHorario().getDia(), ruta.getHorario().getHoraInicio(), ruta.getHorario().getHoraFin());
+            Horario horario = new Horario(ruta.getHorario().getHoraInicio(), ruta.getHorario().getHoraFin());
             horarioRepository.save(horario);
 
             // Asignamos el horario a la ruta:
@@ -140,12 +149,11 @@ public class RutaService {
         rutaRepository.save(ruta);
     }
 
-    public void actualizarRuta(UUID id, Ruta ruta) {
+    public void actualizarRuta(UUID id, RutaDTO ruta) {
         Ruta rutaExistente = rutaRepository.findById(id).orElseThrow(()-> new RutaNotFoundException(id));
         Horario horarioExistente = rutaExistente.getHorario();
 
         // Actualizamos el horario existente:
-        horarioExistente.setDia(ruta.getHorario().getDia());
         horarioExistente.setHoraInicio(ruta.getHorario().getHoraInicio());
         horarioExistente.setHoraFin(ruta.getHorario().getHoraFin());
         horarioRepository.save(horarioExistente);

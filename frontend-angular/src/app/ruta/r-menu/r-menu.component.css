@@ -44,10 +44,15 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 20px;
+  font-size: 1rem;
 }
 
 btn-guia:hover {
   background-color: #c30512;
+}
+
+button:hover {
+  background-color: #b91c1c;
 }
 
 .grid {
@@ -86,18 +91,12 @@ btn-guia:hover {
 }
 
 .guia-modal img {
-  width: 100%;
   height: auto;
+  width: 900px;
 }
 
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
+.guia-modal p-button {
+  justify-content: right;
 }
 
 .icon-close {

@@ -1,4 +1,4 @@
-package com.javeriana.pontimovil.ponti_movil.dto.pasajero;
+package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta;
 
 import lombok.Value;
 
