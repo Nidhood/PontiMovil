@@ -1,5 +1,6 @@
 package com.javeriana.pontimovil.ponti_movil.controllers;
 
+import com.javeriana.pontimovil.ponti_movil.dto.gestion_buses.bus.BRutaDTO;
 import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta.RutaDTO;
 import com.javeriana.pontimovil.ponti_movil.entities.Ruta;
 import com.javeriana.pontimovil.ponti_movil.entities.RutaEstacion;
@@ -26,6 +27,18 @@ public class RutaController {
     @GetMapping
     public List<Ruta> obtenerRutas() {
         return rutaService.obtenerRutas();
+    }
+
+    // Nuevo método para obtener rutas con BRutaDTO (Añadido)
+    @GetMapping("/dto")
+    public List<BRutaDTO> obtenerRutasConDTO() {
+        return rutaService.obtenerRutasConDTO();
+    }
+
+    // Obtener ruta por ID con BRutaDTO (Añadido)
+    @GetMapping("/dto/{id}")
+    public BRutaDTO obtenerRutaPorIdDTO(@PathVariable UUID id) {
+        return rutaService.obtenerRutaPorIdDTO(id);
     }
 
     @GetMapping("/detalladas")

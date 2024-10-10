@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -51,4 +52,5 @@ public class Ruta {
                 ", horario=" + horario +
                 '}';
     }
+
 }

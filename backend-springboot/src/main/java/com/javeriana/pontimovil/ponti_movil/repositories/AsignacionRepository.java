@@ -16,10 +16,14 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, UUID> {
     List<Asignacion> findByConductorId(UUID idConductor);
     Asignacion findByConductorIdAndBusIdAndDiaSemana(UUID idConductor, UUID idBus, String diaSemana);
     List<Asignacion> findByConductor(Conductor conductor);
+    List<Asignacion> findByBusId(UUID id);
+
     @Query(value = "SELECT dia " +
             "FROM (VALUES ('Lunes'), ('Martes'), ('Miercoles'), ('Jueves'), ('Viernes'), ('Sabado'), ('Domingo')) AS dias(dia) " +
             "WHERE dia NOT IN (SELECT DIA_SEMANA FROM ASIGNACIONES WHERE BUS_ID = :idBus)", nativeQuery = true)
     List<String> findDiasSemanaDisponibleByBusId(@Param("idBus") UUID idBus);
     Asignacion findByBusIdAndDiaSemana(UUID idBus, String diaSemana);
     List<Asignacion> findByBusIdAndRutaIdAndDiaSemana(UUID idBus, UUID idRuta, String diaSemana);
+
+
 }

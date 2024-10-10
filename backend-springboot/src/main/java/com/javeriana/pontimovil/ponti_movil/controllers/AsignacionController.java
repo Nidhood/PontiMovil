@@ -1,101 +1,66 @@
 package com.javeriana.pontimovil.ponti_movil.controllers;
 
-import com.javeriana.pontimovil.ponti_movil.entities.Asignacion;
-import com.javeriana.pontimovil.ponti_movil.entities.Bus;
-import com.javeriana.pontimovil.ponti_movil.entities.Conductor;
+import com.javeriana.pontimovil.ponti_movil.dto.gestion_buses.bus.BAsignacionDTO;
 import com.javeriana.pontimovil.ponti_movil.services.AsignacionService;
-import com.javeriana.pontimovil.ponti_movil.services.BusService;
-import com.javeriana.pontimovil.ponti_movil.services.ConductorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/asignaciones")
 public class AsignacionController {
 
-    // Repositorios:
+    // Servicios:
     private final AsignacionService asignacionService;
-    private final ConductorService conductorService;
-    private final BusService busService;
-
 
     // Constructor:
     @Autowired
-    public AsignacionController(AsignacionService asignacionService, ConductorService conductorService, BusService busService) {
+    public AsignacionController(AsignacionService asignacionService) {
         this.asignacionService = asignacionService;
-        this.conductorService = conductorService;
-        this.busService = busService;
     }
 
-    // Métodos:
+    // Obtener todas las asignaciones
     @GetMapping
-    public List<Asignacion> obtenerAsignaciones() {
-        return asignacionService.obtenerAsignaciones();
+    public ResponseEntity<List<BAsignacionDTO>> obtenerAsignaciones() {
+        List<BAsignacionDTO> asignaciones = asignacionService.obtenerAsignaciones();
+        return ResponseEntity.ok(asignaciones);
     }
 
-    // SOLO PAGINA
-    @GetMapping("/{idConductor}/editar")
-    public ModelAndView obtenerAsignacionesPorConductor(@PathVariable UUID idConductor) {
-        Conductor conductor = conductorService.obtenerConductorPorId(idConductor);
-        List<Asignacion> asignaciones = asignacionService.obtenerAsignacionesPorConductor(idConductor);
-        List<Bus> buses = busService.obtenerBuses();
-
-        // !!! Mejorar el codigo de abajo, que sea una Query !!!.
-        // Crear un mapa de días disponibles para cada bus
-        Map<UUID, List<String>> diasDisponiblesPorBus = new HashMap<>();
-        buses.removeIf(bus -> {
-            List<String> diasDisponibles = asignacionService.obtenerDiasDisponibles(bus.getId());
-            if (diasDisponibles.isEmpty()) {
-                return true; // Remueve el bus si no tiene días disponibles
-            } else {
-                diasDisponiblesPorBus.put(bus.getId(), diasDisponibles);
-                return false;
-            }
-        });
-        ModelAndView modelAndView = new ModelAndView("coordinator/c-gestionar-asignaciones-buses");
-        modelAndView.addObject("asignaciones", asignaciones);
-        modelAndView.addObject("buses", buses);
-        modelAndView.addObject("conductor", conductor);
-        modelAndView.addObject("diasDisponiblesPorBus", diasDisponiblesPorBus);
-        return modelAndView;
+    // Obtener asignaciones por conductor
+    @GetMapping("/conductor/{idConductor}")
+    public ResponseEntity<List<BAsignacionDTO>> obtenerAsignacionesPorConductor(@PathVariable UUID idConductor) {
+        List<BAsignacionDTO> asignaciones = asignacionService.obtenerAsignacionesPorConductor(idConductor);
+        return ResponseEntity.ok(asignaciones);
     }
 
+    // Asignar un conductor a un bus
     @PostMapping("/{idConductor}/asignarBus/{idBus}")
-    public void asignarBus(@PathVariable UUID idConductor, @PathVariable UUID idBus, @RequestParam List<String> diasSemana) {
-        for (String diaSemana : diasSemana) {
-            asignacionService.asignarBus(idConductor, idBus, diaSemana);
-        }
+    public ResponseEntity<Void> asignarBus(@PathVariable UUID idConductor, @PathVariable UUID idBus, @RequestParam String diaSemana) {
+        asignacionService.asignarBus(idConductor, idBus, diaSemana);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{idConductor}/desasignarBus/{idBus}/{diaSemana}")
-    public void desasignarBus(@PathVariable UUID idConductor, @PathVariable UUID idBus, @PathVariable String diaSemana) {
+    // Desasignar un conductor de un bus
+    @DeleteMapping("/{idConductor}/desasignarBus/{idBus}/{diaSemana}")
+    public ResponseEntity<Void> desasignarBus(@PathVariable UUID idConductor, @PathVariable UUID idBus, @PathVariable String diaSemana) {
         asignacionService.desasignarBus(idConductor, idBus, diaSemana);
+        return ResponseEntity.ok().build();
     }
 
+    // Asignar una ruta a un bus
     @PostMapping("/{idBus}/asignarRuta/{idRuta}")
-    public void asignarRuta(@PathVariable UUID idBus, @PathVariable UUID idRuta, @RequestParam List<String> diasSemana) {
-        for(String diaSemana : diasSemana) {
-            asignacionService.asignarRuta(idBus, idRuta, diaSemana);
-        }
+    public ResponseEntity<Void> asignarRuta(@PathVariable UUID idBus, @PathVariable UUID idRuta, @RequestParam String diaSemana) {
+        asignacionService.asignarRuta(idBus, idRuta, diaSemana);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{idBus}/desasignarRuta/{idRuta}")
-    public void desasignarRuta(@PathVariable UUID idBus, @PathVariable UUID idRuta) {
+    // Desasignar una ruta de un bus
+    @DeleteMapping("/{idBus}/desasignarRuta/{idRuta}")
+    public ResponseEntity<Void> desasignarRuta(@PathVariable UUID idBus, @PathVariable UUID idRuta) {
         asignacionService.desasignarRuta(idBus, idRuta);
-    }
-
-    @PostMapping("/{idRuta}/asignarEstacion/{idEstacion}")
-    public void asignarEstacion(@PathVariable UUID idRuta, @PathVariable UUID idEstacion) {
-        asignacionService.asignarEstacion(idRuta, idEstacion);
-    }
-
-    @PostMapping("/{idRuta}/desasignarEstacion/{idEstacion}")
-    public void desasignarEstacion(@PathVariable UUID idRuta, @PathVariable UUID idEstacion) {
-        asignacionService.desasignarEstacion(idRuta, idEstacion);
+        return ResponseEntity.ok().build();
     }
 }
