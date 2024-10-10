@@ -11,7 +11,6 @@
       <ng-lottie [options]="options"></ng-lottie>
     </div>
 
-
     <div *ngIf="!isLoading" class="grid">
       <!-- Tabla de buses utilizando PrimeNG -->
       <p-table [value]="(buses$ | async) ?? []" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'">
@@ -28,29 +27,51 @@
             <td>{{ bus?.placa }}</td>
             <td>{{ bus?.modelo }}</td>
             <td>
-              <p-button icon="pi pi-eye" label="Ver más" severity="secondary" [rounded]="true" [text]="true" [raised]="true "class="p-button-text" (click)="seleccionarBus(bus)">
-
+              <!-- Botón Ver más -->
+              <p-button
+                icon="pi pi-eye"
+                label="Ver más"
+                severity="secondary"
+                [rounded]="true"
+                [text]="true"
+                [raised]="true"
+                class="p-button-text"
+                (click)="seleccionarBus(bus)">
               </p-button>
-              <p-button icon="pi pi-trash" label="Eliminar" severity="danger" [rounded]="true" class="p-button-danger p-button-text" (click)="eliminarBus(bus.id)">
 
+              <!-- Botón Eliminar con confirmación -->
+              <p-confirmDialog></p-confirmDialog>
+              <p-button
+                icon="pi pi-trash"
+                label="Eliminar"
+                severity="danger"
+                [rounded]="true"
+                class="p-button-danger p-button-text"
+                (click)="confirmarEliminacion(bus)">
               </p-button>
             </td>
           </tr>
         </ng-template>
       </p-table>
+
       <!-- Agregar nuevo bus -->
       <app-b-modulo-agregar-bus (busGuardado)="guardarNuevoBus($event)"></app-b-modulo-agregar-bus>
-
-
     </div>
 
-
-
     <!-- Detalles del bus seleccionado -->
-    <app-b-detalles-bus *ngIf="selectedBus" [bus]="selectedBus" (close)="cerrarDetalles()" (edit)="editarBus()"></app-b-detalles-bus>
+    <app-b-detalles-bus
+      *ngIf="selectedBus"
+      [bus]="selectedBus"
+      (close)="cerrarDetalles()"
+      (edit)="editarBus()">
+    </app-b-detalles-bus>
 
     <!-- Edición del bus seleccionado -->
-    <app-b-editar-bus *ngIf="editBus" [bus]="editBus" (close)="cerrarEditar()" (save)="guardarCambiosBus($event)"></app-b-editar-bus>
-
+    <app-b-editar-bus
+      *ngIf="editBus"
+      [bus]="editBus"
+      (close)="cerrarEditar()"
+      (save)="guardarCambiosBus($event)">
+    </app-b-editar-bus>
   </div>
 </div>

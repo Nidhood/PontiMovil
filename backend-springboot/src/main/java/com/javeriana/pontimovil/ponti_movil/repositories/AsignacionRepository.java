@@ -26,4 +26,5 @@ public interface AsignacionRepository extends JpaRepository<Asignacion, UUID> {
     List<Asignacion> findByBusIdAndRutaIdAndDiaSemana(UUID idBus, UUID idRuta, String diaSemana);
 
 
+
 }

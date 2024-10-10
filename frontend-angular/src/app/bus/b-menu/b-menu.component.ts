@@ -12,11 +12,13 @@ import { Button } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { map } from 'rxjs/operators';
 import { BModuloAgregarBusComponent } from '../b-modulo-agregar-bus/b-modulo-agregar-bus.component';
-
+import { MessageService, ConfirmationService } from 'primeng/api';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';  // Importar MessageService y ConfirmationService
 
 @Component({
   selector: 'app-b-menu',
   standalone: true,
+  providers: [MessageService, ConfirmationService],  // Proveedor de servicios
   imports: [
     NgIf,
     AsyncPipe,
@@ -28,7 +30,8 @@ import { BModuloAgregarBusComponent } from '../b-modulo-agregar-bus/b-modulo-agr
     Button,
     BAgregarBusComponent,
     TableModule,
-    BModuloAgregarBusComponent
+    BModuloAgregarBusComponent,
+    ConfirmDialogModule
   ],
   templateUrl: './b-menu.component.html',
   styleUrls: ['./b-menu.component.css']
@@ -47,7 +50,11 @@ export class BMenuComponent implements OnInit {
 
   iconLoaded = false;
 
-  constructor(private gestionarBusesService: GestionarBusesService) {}
+  constructor(
+    private gestionarBusesService: GestionarBusesService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService  // Inyectar el servicio de confirmación
+  ) {}
 
   ngOnInit() {
     this.cargarBuses();
@@ -89,47 +96,55 @@ export class BMenuComponent implements OnInit {
 
   cargarBuses() {
     this.isLoading = true;
-    console.log('Cargando buses...');
     this.gestionarBusesService.listaBuses().pipe(
       finalize(() => this.isLoading = false)
     ).subscribe(
       (buses: BusDTO[]) => {
-        console.log('Buses cargados:', buses);
         this.busesSubject.next(buses);
       },
       error => {
-        console.error('Error al cargar buses:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cargar los buses' });
       }
     );
   }
 
+  confirmarEliminacion(bus: BusDTO) {
+    this.confirmationService.confirm({
+      message: `¿Estás seguro de que deseas eliminar el bus con placa ${bus.placa}?`,
+      header: 'Confirmación de eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.eliminarBus(bus.id);
+      }
+    });
+  }
+
+  eliminarBus(id: string) {
+    this.gestionarBusesService.eliminarBus(id).subscribe(() => {
+      this.cargarBuses();
+      this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Bus eliminado exitosamente' });
+    }, error => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el bus' });
+    });
+  }
+
+  guardarNuevoBus(busNuevo: BusDTO) {
+    this.gestionarBusesService.crearBus(busNuevo).subscribe(() => {
+      this.cargarBuses();
+      this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Nuevo bus agregado exitosamente' });
+    }, error => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el bus' });
+    });
+  }
 
   guardarCambiosBus(busActualizado: BusDTO) {
     this.gestionarBusesService.actualizarBus(busActualizado).subscribe(
       () => {
         this.cargarBuses();
         this.cerrarEditar();
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Bus actualizado exitosamente' });
       },
       error => console.error('Error al guardar cambios:', error)
-    );
-  }
-
-  eliminarBus(id: string) {
-    if (confirm('¿Estás seguro de que deseas eliminar este bus?')) {
-      this.gestionarBusesService.eliminarBus(id).subscribe(() => {
-        this.cargarBuses();  // Recargar la lista de buses después de eliminar
-        alert('Bus eliminado exitosamente');
-      }, error => console.error('Error al eliminar el bus:', error));
-    }
-  }
-
-  guardarNuevoBus(busNuevo: BusDTO) {
-    this.gestionarBusesService.crearBus(busNuevo).subscribe(
-      () => {
-        console.log('Nuevo bus agregado, cargando buses...');  // Añade este log para confirmar que se llama este método
-        this.cargarBuses();  // Recargar la lista de buses después de agregar uno nuevo
-      },
-      error => console.error('Error al guardar el nuevo bus:', error)
     );
   }
 

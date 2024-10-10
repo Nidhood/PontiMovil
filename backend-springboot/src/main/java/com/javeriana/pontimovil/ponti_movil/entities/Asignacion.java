@@ -43,6 +43,12 @@ public class Asignacion {
         this.diaSemana = diaSemana;
     }
 
+    public Asignacion(Bus bus, Ruta ruta) {
+        this.bus = bus;
+        this.ruta = ruta;
+    }
+
+
     // Métodos:
     @Override
     public boolean equals(Object o) {

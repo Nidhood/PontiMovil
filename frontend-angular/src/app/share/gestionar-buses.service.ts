@@ -34,27 +34,24 @@ export class GestionarBusesService {
     return this.http.delete<void>(`${environment.SERVE_URL}/buses/${id}/eliminar`);
   }
 
-  // Obtener las rutas asignadas a un bus
-  obtenerRutasPorBus(idBus: string | undefined): Observable<RutaDTO[]> { // Asumiendo que tienes un RutaDTO
-    return this.http.get<RutaDTO[]>(`${environment.SERVE_URL}/rutas/bus/${idBus}`);
-  }
-
-  // Obtener los conductores asignados a un bus
-  obtenerConductoresPorBus(idBus: string | undefined): Observable<ConductorDTO[]> {
-    return this.http.get<ConductorDTO[]>(`${environment.SERVE_URL}/conductores/bus/${idBus}`);
-  }
-
   // Obtener asignaciones por bus
   obtenerAsignacionesPorBus(busId: string): Observable<AsignacionDTO[]> {
     return this.http.get<AsignacionDTO[]>(`${environment.SERVE_URL}/asignaciones/bus/${busId}`);
   }
 
-  // Obtener todos los conductores disponibles
-  obtenerTodosLosConductores(): Observable<ConductorDTO[]> {
-    return this.http.get<ConductorDTO[]>(`${environment.SERVE_URL}/conductores`);
-  }
-
   obtenerRutas() : Observable<RutaDTO[]> {
     return this.http.get<RutaDTO[]>(`${environment.SERVE_URL}/rutas/dto`);
   }
+
+  // **Nueva funcionalidad: Asignar ruta a bus**
+  asignarRutaABus(BusID: string, RutaID: string): Observable<void> {
+    return this.http.post<void>(`${environment.SERVE_URL}/asignaciones/${BusID}/asignarRuta/${RutaID}`, {});
+  }
+
+  // **Nueva funcionalidad: Desasignar ruta de bus**
+  desasignarRutaDeBus(BusID: string, RutaID: string): Observable<void> {
+    return this.http.delete<void>(`${environment.SERVE_URL}/asignaciones/${BusID}/desasignarRuta/${RutaID}`);
+  }
+
+
 }

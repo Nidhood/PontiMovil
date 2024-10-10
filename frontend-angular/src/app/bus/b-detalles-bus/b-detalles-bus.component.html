@@ -14,15 +14,6 @@
 
     <ng-template #content>
       <div class="section">
-        <h3><i class="icon-user"></i> Conductores Asignados:</h3>
-        <ul>
-          <!-- Validamos que existan conductores asignados a través de las asignaciones -->
-          <li *ngFor="let conductor of conductoresAsignados">{{ conductor.nombre }} {{ conductor.apellido }}</li>
-          <li *ngIf="!conductoresAsignados.length">No hay conductores asignados a este bus.</li>
-        </ul>
-      </div>
-
-      <div class="section">
         <h3><i class="icon-bus"></i> Rutas Asignadas:</h3>
         <ul>
           <!-- Validamos que existan rutas asignadas a través de las asignaciones -->

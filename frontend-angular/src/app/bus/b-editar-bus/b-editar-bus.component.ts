@@ -1,107 +1,100 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
-import { GestionarBusesService } from '../../share/gestionar-buses.service';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { BusDTO } from '../../dto/gestionar-buses/bus/bus-dto';
-import { ConductorDTO } from '../../dto/gestionar-buses/bus/conductor-dto';
 import { RutaDTO } from '../../dto/gestionar-buses/bus/ruta-dto';
-import { AsignacionDTO } from '../../dto/gestionar-buses/bus/asignacion-dto';
-import { PickListModule } from 'primeng/picklist';
+import { MessageService } from 'primeng/api';
+import {GestionarBusesService} from '../../share/gestionar-buses.service';
+import {FormsModule} from '@angular/forms';
+import {PickListModule} from 'primeng/picklist';
 import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-b-editar-bus',
-  standalone: true,
-  imports: [FormsModule, Button, PickListModule, NgIf],
   templateUrl: './b-editar-bus.component.html',
-  styleUrls: ['./b-editar-bus.component.css']
+  standalone: true,
+  imports: [
+    FormsModule,
+    PickListModule,
+    NgIf
+  ],
+  styleUrls: ['./b-editar-bus.component.scss']
 })
-export class BEditarBusComponent {
-  @Input() bus: BusDTO = new BusDTO('', '', '', [], []); // Inicializamos el BusDTO
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<BusDTO>();
-
+export class BEditarBusComponent implements OnInit {
+  @Input() bus!: BusDTO;  // Recibe el bus que se va a editar
+  @Output() close = new EventEmitter<void>(); // Evento para informar al componente padre que debe cerrar el modal
   rutasAsignadas: RutaDTO[] = [];
   rutasNoAsignadas: RutaDTO[] = [];
-  conductoresAsignados: ConductorDTO[] = [];
-  conductoresNoAsignados: ConductorDTO[] = [];
-  isLoading = true;
+  isLoading: boolean = true;
+  @Output() save = new EventEmitter<BusDTO>();
 
-  constructor(private gestionarBusesService: GestionarBusesService) {}
+  constructor(
+    private gestionarBusesService: GestionarBusesService,
+    private messageService: MessageService // Para notificaciones opcionales
+  ) {}
 
-  ngOnInit() {
-    if (this.bus) {
-      this.cargarAsignaciones();
-    }
+  ngOnInit(): void {
+    this.cargarDatosBus();
   }
 
-  cargarAsignaciones() {
-    this.isLoading = true;
+  cargarDatosBus(): void {
+    // Carga las rutas y asignaciones al iniciar la edición
+    this.gestionarBusesService.obtenerAsignacionesPorBus(this.bus.id)
+      .subscribe((asignaciones) => {
+        this.gestionarBusesService.obtenerRutas()
+          .subscribe((todasLasRutas) => {
+            // Filtrar rutas asignadas y no asignadas
+            this.rutasAsignadas = asignaciones.map(a => a.ruta); // Asignadas
+            this.rutasNoAsignadas = todasLasRutas.filter(ruta =>
+              !this.rutasAsignadas.some(asignada => asignada.id === ruta.id)
+            ); // No asignadas
+            this.isLoading = false;
+          });
+      });
+  }
 
-    this.gestionarBusesService.obtenerAsignacionesPorBus(this.bus.id).subscribe(
-      (asignaciones: AsignacionDTO[]) => {
-        const idsRutasAsignadas = asignaciones.map(asignacion => asignacion.ruta?.id);
-        const idsConductoresAsignados = asignaciones.map(asignacion => asignacion.conductor.id);
-
-        // Obtener rutas y filtrar asignadas/no asignadas
-        this.gestionarBusesService.obtenerRutas().subscribe(
-          (rutas: RutaDTO[]) => {
-            this.rutasAsignadas = rutas.filter(ruta => idsRutasAsignadas.includes(ruta.id));
-            this.rutasNoAsignadas = rutas.filter(ruta => !idsRutasAsignadas.includes(ruta.id));
+  onMoveToTarget(event: any): void {
+    const rutasAsignadas: RutaDTO[] = event.items;
+    rutasAsignadas.forEach(ruta => {
+      this.gestionarBusesService.asignarRutaABus(this.bus.id, ruta.id)
+        .subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Asignación', detail: `Ruta ${ruta.codigo} asignada.` });
           },
-          error => console.error('Error al cargar rutas:', error)
-        );
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: `No se pudo asignar la ruta ${ruta.codigo}.` });
+          }
+        });
+    });
+  }
 
-        // Obtener conductores y filtrar asignados/no asignados
-        this.gestionarBusesService.obtenerTodosLosConductores().subscribe(
-          (conductores: ConductorDTO[]) => {
-            this.conductoresAsignados = conductores.filter(conductor => idsConductoresAsignados.includes(conductor.id));
-            this.conductoresNoAsignados = conductores.filter(conductor => !idsConductoresAsignados.includes(conductor.id));
+  onMoveToSource(event: any): void {
+    const rutasDesasignadas: RutaDTO[] = event.items;
+    rutasDesasignadas.forEach(ruta => {
+      this.gestionarBusesService.desasignarRutaDeBus(this.bus.id, ruta.id)
+        .subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Desasignación', detail: `Ruta ${ruta.codigo} desasignada.` });
           },
-          error => console.error('Error al cargar conductores:', error)
-        );
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: `No se pudo desasignar la ruta ${ruta.codigo}.` });
+          }
+        });
+    });
+  }
 
-        this.isLoading = false;
+  saveChanges(): void {
+    // Actualización del bus con la nueva información
+    this.gestionarBusesService.actualizarBus(this.bus).subscribe({
+      next: (busActualizado) => {
+        this.messageService.add({ severity: 'success', summary: 'Actualización', detail: 'Bus actualizado con éxito.' });
+        this.closeEdit(); // Cierra el modal después de guardar los cambios
       },
-      error => {
-        console.error('Error al cargar asignaciones:', error);
-        this.isLoading = false;
-      }
-    );
-  }
-
-  onMoveToTarget(event: any) {
-    event.items.forEach((item: any) => {
-      if (item instanceof RutaDTO) {
-        this.rutasAsignadas.push(item);
-      } else if (item instanceof ConductorDTO) {
-        this.conductoresAsignados.push(item);
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al actualizar el bus.' });
       }
     });
   }
 
-  onMoveToSource(event: any) {
-    event.items.forEach((item: any) => {
-      if (item instanceof RutaDTO) {
-        this.rutasNoAsignadas.push(item);
-      } else if (item instanceof ConductorDTO) {
-        this.conductoresNoAsignados.push(item);
-      }
-    });
-  }
-
-  saveChanges() {
-    this.bus.rutas = this.rutasAsignadas; // Actualizamos las rutas asignadas al bus
-
-    this.gestionarBusesService.actualizarBus(this.bus).subscribe(
-      (busActualizado: BusDTO) => {
-        this.save.emit(busActualizado);  // Emitimos el bus actualizado
-      },
-      error => console.error('Error al actualizar el bus:', error)
-    );
-  }
-
-  closeEdit() {
-    this.close.emit();  // Emitimos el evento para cerrar el modal
+  closeEdit(): void {
+    this.close.emit(); // Emitir el evento para que el componente padre cierre el modal
   }
 }

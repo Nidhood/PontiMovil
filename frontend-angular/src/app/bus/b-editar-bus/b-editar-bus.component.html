@@ -1,6 +1,6 @@
 <div class="edit-modal">
   <div class="modal-header">
-    <h2>Editar Bus {{ bus.placa }}</h2>
+    <h2>Editar Bus {{ bus.placa }}</h2> <!-- Usamos la copia para edición -->
     <button class="close-button" (click)="closeEdit()">×</button>
   </div>
 
@@ -30,25 +30,14 @@
         [target]="rutasAsignadas"
         sourceHeader="Rutas No Asignadas"
         targetHeader="Rutas Asignadas"
+        [dragdrop]="true"
+        [responsive]="true"
+        [sourceStyle]="{ height: '30rem' }"
+        [targetStyle]="{ height: '30rem' }"
         (onMoveToTarget)="onMoveToTarget($event)"
         (onMoveToSource)="onMoveToSource($event)">
         <ng-template let-ruta pTemplate="item">
           {{ ruta.codigo }}
-        </ng-template>
-      </p-pickList>
-    </div>
-
-    <div class="station-list">
-      <h3>Conductores Asignados</h3>
-      <p-pickList
-        [source]="conductoresNoAsignados"
-        [target]="conductoresAsignados"
-        sourceHeader="Conductores No Asignados"
-        targetHeader="Conductores Asignados"
-        (onMoveToTarget)="onMoveToTarget($event)"
-        (onMoveToSource)="onMoveToSource($event)">
-        <ng-template let-conductor pTemplate="item">
-          {{ conductor.nombre }} {{ conductor.apellido }}
         </ng-template>
       </p-pickList>
     </div>

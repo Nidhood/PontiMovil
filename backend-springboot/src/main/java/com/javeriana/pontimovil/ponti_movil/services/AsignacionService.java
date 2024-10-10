@@ -34,7 +34,7 @@ public class AsignacionService {
     // Métodos para convertir entidades a DTOs
     private BAsignacionDTO mapToAsignacionDTO(Asignacion asignacion) {
         BBusDTO busDTO = new BBusDTO(asignacion.getBus().getId().toString(), asignacion.getBus().getPlaca(), asignacion.getBus().getModelo(), null, null);
-        BConductorDTO conductorDTO = new BConductorDTO(asignacion.getConductor().getId().toString(), asignacion.getConductor().getNombre(), asignacion.getConductor().getApellido());
+        BConductorDTO conductorDTO = asignacion.getConductor() != null ? new BConductorDTO(asignacion.getConductor().getId().toString(), asignacion.getConductor().getNombre(), asignacion.getConductor().getApellido()) : null;
         BRutaDTO rutaDTO = asignacion.getRuta() != null ? new BRutaDTO(asignacion.getRuta().getId().toString(), asignacion.getRuta().getCodigo(), null, null, null) : null;
 
         return new BAsignacionDTO(asignacion.getId().toString(), conductorDTO, busDTO, rutaDTO);
@@ -66,23 +66,34 @@ public class AsignacionService {
     }
 
     // Asignar una ruta a un bus
-    public void asignarRuta(UUID idBus, UUID idRuta, String diaSemana) {
-        Asignacion asignacion = asignacionRepository.findByBusIdAndDiaSemana(idBus, diaSemana);
+    public void asignarRuta(UUID idBus, UUID idRuta) {
+        Bus bus = busRepository.findById(idBus).orElseThrow(() -> new BusNotFoundException(idBus));
+        Ruta ruta = rutaRepository.findById(idRuta).orElseThrow(() -> new RutaNotFoundException(idRuta));
 
-        if (asignacion != null) {
-            Ruta ruta = rutaRepository.findById(idRuta).orElseThrow(() -> new RutaNotFoundException(idRuta));
-            asignacion.setRuta(ruta);
-            asignacionRepository.save(asignacion);
+        // Revisa si ya existe una asignación de esa ruta para ese bus
+        List<Asignacion> asignaciones = asignacionRepository.findByBusId(idBus);
+        Asignacion asignacionExistente = asignaciones.stream()
+                .filter(a -> a.getRuta() != null && a.getRuta().getId().equals(idRuta))
+                .findFirst()
+                .orElse(null);
+
+        if (asignacionExistente == null) {
+            // Crear una nueva asignación si no existe
+            Asignacion nuevaAsignacion = new Asignacion(bus, ruta);
+            asignacionRepository.save(nuevaAsignacion);
+        } else {
+            // Si ya está asignada, lanza una excepción o realiza alguna otra acción
+            throw new RutaAlreadyAssignedException(idBus, idRuta);
         }
     }
 
+
     // Desasignar una ruta de un bus
     public void desasignarRuta(UUID idBus, UUID idRuta) {
-
-        // Encontramos todas las asignaciones por bus y ruta todos los días de la semana:
+        // Encontramos todas las asignaciones por bus y ruta
         List<Asignacion> asignaciones = asignacionRepository.findByBusIdAndRutaId(idBus, idRuta);
 
-        // Eliminamos todas las asignaciones encontradas:
+        // Eliminamos todas las asignaciones encontradas
         asignacionRepository.deleteAll(asignaciones);
     }
 
@@ -99,12 +110,11 @@ public class AsignacionService {
         return asignacionRepository.findDiasSemanaDisponibleByBusId(idBus);
     }
 
-    // En AsignacionService.java
+    // Obtener asignaciones por bus
     public List<BAsignacionDTO> obtenerAsignacionesPorBus(UUID idBus) {
         return asignacionRepository.findByBusId(idBus)
                 .stream()
                 .map(this::mapToAsignacionDTO)
                 .collect(Collectors.toList());
     }
-
 }

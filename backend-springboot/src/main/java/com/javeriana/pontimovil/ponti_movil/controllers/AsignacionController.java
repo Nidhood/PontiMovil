@@ -60,8 +60,8 @@ public class AsignacionController {
 
     // Asignar una ruta a un bus
     @PostMapping("/{idBus}/asignarRuta/{idRuta}")
-    public ResponseEntity<Void> asignarRuta(@PathVariable UUID idBus, @PathVariable UUID idRuta, @RequestParam String diaSemana) {
-        asignacionService.asignarRuta(idBus, idRuta, diaSemana);
+    public ResponseEntity<Void> asignarRuta(@PathVariable UUID idBus, @PathVariable UUID idRuta) {
+        asignacionService.asignarRuta(idBus, idRuta);
         return ResponseEntity.ok().build();
     }
 
@@ -71,4 +71,6 @@ public class AsignacionController {
         asignacionService.desasignarRuta(idBus, idRuta);
         return ResponseEntity.ok().build();
     }
+
+
 }

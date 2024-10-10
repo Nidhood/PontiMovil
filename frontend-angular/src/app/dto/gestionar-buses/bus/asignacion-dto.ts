@@ -6,7 +6,7 @@ import {RutaDTO} from './ruta-dto';
 export class AsignacionDTO {
   constructor(
     public id: string,
-    public conductor: ConductorDTO,
+    public conductor: any,
     public bus: BusDTO,
     public ruta: RutaDTO
   ) {}

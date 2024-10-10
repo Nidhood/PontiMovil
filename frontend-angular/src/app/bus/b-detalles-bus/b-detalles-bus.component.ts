@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 import { BusDTO } from '../../dto/gestionar-buses/bus/bus-dto';
-import { ConductorDTO } from '../../dto/gestionar-buses/bus/conductor-dto';
 import { RutaDTO } from '../../dto/gestionar-buses/bus/ruta-dto';
 import { ButtonModule } from 'primeng/button';
-import { AsignacionDTO } from '../../dto/gestionar-buses/bus/asignacion-dto';
-import { GestionarBusesService } from '../../share/gestionar-buses.service'; // Importamos PrimeNG para los botones
-import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import {AsignacionDTO} from '../../dto/gestionar-buses/bus/asignacion-dto';
+import {GestionarBusesService} from '../../share/gestionar-buses.service'; // Importamos PrimeNG para los botones
+import {AnimationOptions, LottieComponent} from 'ngx-lottie';
 
 @Component({
   selector: 'app-b-detalles-bus',
@@ -22,7 +21,6 @@ export class BDetallesBusComponent {
   @Output() edit = new EventEmitter<void>();  // Evento para editar el bus
 
   asignaciones: AsignacionDTO[] = [];
-  conductoresAsignados: ConductorDTO[] = [];
   rutasAsignadas: RutaDTO[] = [];
   isLoading = true;
 
@@ -47,11 +45,7 @@ export class BDetallesBusComponent {
       next: (asignaciones: AsignacionDTO[]) => {
         this.asignaciones = asignaciones;
 
-        // Usamos 'map' para obtener listas únicas de conductores y rutas
-        this.conductoresAsignados = asignaciones
-          .map(asignacion => asignacion.conductor)
-          .filter((conductor, index, self) => conductor && self.findIndex(c => c.id === conductor?.id) === index);
-
+        // Filtramos solo las rutas asignadas
         this.rutasAsignadas = asignaciones
           .map(asignacion => asignacion.ruta)
           .filter((ruta, index, self) => ruta && self.findIndex(r => r?.id === ruta?.id) === index);
