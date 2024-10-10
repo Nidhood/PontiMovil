@@ -46,8 +46,8 @@ public class ConductorController {
     // }
 
     @PostMapping("/{id}/actualizar")
-        public void actualizarConductor(@PathVariable UUID id, @RequestBody Conductor ruta) {
-            rutaService.actualizarConductor(id, ruta);
+        public void actualizarConductor(@PathVariable UUID id, @RequestBody Conductor conductor) {
+            conductorService.actualizarConductor(id, conductor);
     }
 
     @DeleteMapping("/{id}/eliminar")

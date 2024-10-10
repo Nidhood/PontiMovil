@@ -9,6 +9,8 @@ import { NgIf } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ConductorDTO } from '../../dto/gestionar-conductores/conductor-dto';
 import { GestionarConductoresService } from '../../share/gestionar-conductores.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-c-editar-conductor',
@@ -22,10 +24,12 @@ import { GestionarConductoresService } from '../../share/gestionar-conductores.s
     DropdownModule,
     ButtonModule,
     FormsModule,
-    InputNumberModule
+    InputNumberModule,
+    ToastModule
   ],
   templateUrl: './c-editar-conductor.component.html',
-  styleUrls: ['./c-editar-conductor.component.css']
+  styleUrls: ['./c-editar-conductor.component.css'],
+  providers: [MessageService]
 })
 export class CEditarConductorComponent implements OnInit {
   @Input() conductor!: ConductorDTO ; 
@@ -33,9 +37,8 @@ export class CEditarConductorComponent implements OnInit {
 
   tipoVia: { label: string; value: string }[] = [];
   registroForm!: FormGroup;
-  messageService: any;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private gestionarConductoresService: GestionarConductoresService) { }
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private gestionarConductoresService: GestionarConductoresService, private messageService: MessageService) { }
 
   ngOnInit(): void {
 
@@ -101,8 +104,7 @@ export class CEditarConductorComponent implements OnInit {
 
       this.gestionarConductoresService.editarConductor(this.conductor).subscribe({
         next: (response: any) => {
-          console.log('Conductor actualizado con éxito:', response);
-          this.registroForm.reset();
+          console.log('Conductor actualizado con éxito');
           this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Conductor actualizado correctamente' });
         },
         error: (error: any) => {

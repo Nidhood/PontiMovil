@@ -29,11 +29,10 @@ export class GestionarConductoresService {
 
   obtenerConductorPorId(id: string): Observable<ConductorDTO> {
     return this.http.get<ConductorDTO>(`${environment.SERVE_URL}/conductores/${id}`);
-
   }
 
-  editarConductor(id: String, conductor: any ):Observable<void>{
-    return this.http.post<void>(`${environment.SERVE_URL}/${conductor?.id}/actualizar`, conductor);
+  editarConductor(conductor: ConductorDTO):Observable<void>{
+    return this.http.post<void>(`${environment.SERVE_URL}/conductores/${conductor.id}/actualizar`, conductor);
   }
   
   setConductorAEditar(conductor:ConductorDTO):void{
