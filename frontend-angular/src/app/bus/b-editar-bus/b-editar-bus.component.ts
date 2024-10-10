@@ -68,11 +68,17 @@ export class BEditarBusComponent implements OnInit {
 
   onMoveToSource(event: any): void {
     const rutasDesasignadas: RutaDTO[] = event.items;
+    console.log('Rutas desasignadas:', rutasDesasignadas);
+
     rutasDesasignadas.forEach(ruta => {
       this.gestionarBusesService.desasignarRutaDeBus(this.bus.id, ruta.id)
         .subscribe({
           next: () => {
             this.messageService.add({ severity: 'success', summary: 'Desasignación', detail: `Ruta ${ruta.codigo} desasignada.` });
+            // Eliminar la ruta desasignada de rutasAsignadas
+            this.rutasAsignadas = this.rutasAsignadas.filter(r => r.id !== ruta.id);
+            // Agregar la ruta a rutasNoAsignadas
+            this.rutasNoAsignadas.push(ruta);
           },
           error: () => {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: `No se pudo desasignar la ruta ${ruta.codigo}.` });
@@ -80,6 +86,7 @@ export class BEditarBusComponent implements OnInit {
         });
     });
   }
+
 
   saveChanges(): void {
     // Actualización del bus con la nueva información
