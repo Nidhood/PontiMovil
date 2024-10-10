@@ -6,6 +6,10 @@ import { ConductorDTO } from '../../dto/gestionar-conductores/conductor-dto';
 import { Observable } from 'rxjs';
 import { CGestionConductoresComponent } from '../c-gestion-conductores/c-gestion-conductores.component';
 import { CCrearConductorComponent } from '../c-crear-conductor/c-crear-conductor.component';
+import { CEditarBusesComponent } from '../c-editar-buses/c-editar-buses.component';
+import { CEditarConductorComponent } from '../c-editar-conductor/c-editar-conductor.component';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-c-menu',
@@ -13,40 +17,67 @@ import { CCrearConductorComponent } from '../c-crear-conductor/c-crear-conductor
   imports: [
     NgIf,
     CommonModule,
+    CEditarBusesComponent,
+    CEditarConductorComponent,
     AsyncPipe,
     RouterLink,
     CGestionConductoresComponent,
-    CCrearConductorComponent
+    CCrearConductorComponent,
+    ButtonModule,
+    FormsModule
   ],
   templateUrl: './c-menu.component.html',
   styleUrls: ['./c-menu.component.css']
 })
 export class CMenuComponent implements OnInit {
   conductores$: Observable<ConductorDTO[]> | undefined;
-
+  mostrarCrearConductor: boolean = false;
+  mostrarEditarConductor: boolean = false;
+  mostrarEditarBuses: boolean = false;
+  slectedConductor: ConductorDTO | null = null;
+  
   constructor(private gestionarConductoresService: GestionarConductoresService) {}
 
   ngOnInit(): void {
     this.conductores$ = this.gestionarConductoresService.obtenerConductores();
   }
 
-  editarBuses(conductor: ConductorDTO): void{
+  onCrearNuevoConductor(): void {
+    this.mostrarCrearConductor = true;
+  }
+
+  volverAGestion(): void {
+    this.mostrarCrearConductor = false;
+  }
+
+  clickEditarConductor(){
+    // this.editarConductor = 
+  }
+
+  onEditarUnConductor(){
+    this.mostrarEditarConductor = true;
+  }
+
+  editarConductor(){
 
   }
 
-  editarConductor(conductor: ConductorDTO): void{
+  onEditarUnosBuses(){
+    this.mostrarEditarBuses = true;
+  }
+
+  asignarBuses(){
 
   }
 
-  nuevoConductor(): void {
-    //Implementar
+  cerrarAsignarBuses(){
+    this.mostrarEditarBuses = false;
   }
 
-  eliminarConductor(id: number): void {
-    if (confirm('¿Está seguro que desea eliminar este conductor?')) {
-      // Lógica para eliminar el conductor con el id proporcionado
-      console.log(`Eliminar conductor con id: ${id}`);
-    }
+  cerrarEditarConductor(){
+    this.mostrarEditarConductor = false;
   }
+
+
 
 }

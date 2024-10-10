@@ -10,9 +10,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { GestionarConductoresService } from '../../share/gestionar-conductores.service';
 
-
-
-
 @Component({
   selector: 'app-c-gestion-conductores',
   standalone: true,
@@ -29,35 +26,38 @@ import { GestionarConductoresService } from '../../share/gestionar-conductores.s
   providers: [ConfirmationService, MessageService]
 })
 export class CGestionConductoresComponent implements OnChanges {
-  @Input() conductores: ConductorDTO[] = []; 
+  @Input() conductores: ConductorDTO[] = [];
   @Output() crearNuevoConductor = new EventEmitter<void>();
+  @Output() editarUnConductor = new EventEmitter<ConductorDTO>();
+  @Output() editarUnosBuses = new EventEmitter<ConductorDTO>();
 
-  constructor(private confirmationService: ConfirmationService, private messageService: MessageService,private gestionarConductoresService: GestionarConductoresService ) {}
 
-    confirm1(event: Event, conductor: ConductorDTO) {
-        this.confirmationService.confirm({
-            target: event.target as EventTarget,
-            message: 'Are you sure that you want to proceed?',
-            header: 'Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            acceptIcon:"none",
-            rejectIcon:"none",
-            rejectButtonStyleClass:"p-button-text",
-            accept: () => {
-                this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
-                this.eliminarConductor(conductor)
-            },
-            reject: () => {
-                this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
-            }
-        });
-    }
+  constructor(private confirmationService: ConfirmationService, private messageService: MessageService, private gestionarConductoresService: GestionarConductoresService) { }
+
+  confirm1(event: Event, conductor: ConductorDTO) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Esta seguro que quiere eliminar?',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon: "none",
+      rejectIcon: "none",
+      rejectButtonStyleClass: "p-button-text",
+      accept: () => {
+        this.messageService.add({ severity: 'info', summary: 'Confirmado', detail: 'Ha aceptado eliminar' });
+        this.gestionarConductoresService.eliminarConductor(conductor.id);
+
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Rechazado', detail: 'You have rejected', life: 3000 });
+      }
+    });
+  }
 
   nuevoConductor() {
     this.crearNuevoConductor.emit();
   }
 
-  // constructor(private router: Router) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['conductores']) {
@@ -67,21 +67,19 @@ export class CGestionConductoresComponent implements OnChanges {
 
   editarBuses(conductor: ConductorDTO): void {
     // Implementa la lógica aquí
-    this.crearNuevoConductor.emit();
+    this.editarUnosBuses.emit(conductor);
   }
 
   editarConductor(conductor: ConductorDTO): void {
     // Implementa la lógica aquí
-    this.crearNuevoConductor.emit();
+    this.editarUnConductor.emit(conductor);
 
   }
 
-  eliminarConductor(conductor: ConductorDTO): void {
-    // Implementa la lógica aquí  
-    console.log(`Eliminar conductor con id: ${conductor.id}`);
-    this.gestionarConductoresService.eliminarConductor(conductor.id)
-  }
+  // eliminarConductor(conductor: ConductorDTO): void {
+  //   // Implementa la lógica aquí  
+  //   this.gestionarConductoresService.eliminarConductor(conductor.id);
+  // }
 
-  
 }
 

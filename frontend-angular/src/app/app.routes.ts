@@ -10,6 +10,7 @@ import { CGestionConductoresComponent } from './conductor/c-gestion-conductores/
 import { CEditarConductorComponent } from './conductor/c-editar-conductor/c-editar-conductor.component';
 import { CCrearConductorComponent } from './conductor/c-crear-conductor/c-crear-conductor.component';
 import { CMenuComponent } from './conductor/c-menu/c-menu.component';
+import { CEditarBusesComponent } from './conductor/c-editar-buses/c-editar-buses.component';
 
 export const routes: Routes = [
   { path: '', component: HIndexComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   {path: 'c-gestion-conductores', component: CGestionConductoresComponent},
   {path: 'c-editar-conductor', component: CEditarConductorComponent},
   {path: 'c-crear-conductor', component: CCrearConductorComponent},
+  {path: 'c-editar-buses', component: CEditarBusesComponent},
   {path: 'c-menu', component: CMenuComponent},
   { path: '**', component: ErrorComponent }
 ];
