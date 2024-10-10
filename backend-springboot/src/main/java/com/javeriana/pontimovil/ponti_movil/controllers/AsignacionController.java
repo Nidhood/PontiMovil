@@ -29,6 +29,14 @@ public class AsignacionController {
         return ResponseEntity.ok(asignaciones);
     }
 
+    // Obtener asignaciones por bus
+    @GetMapping("/bus/{idBus}")
+    public ResponseEntity<List<BAsignacionDTO>> obtenerAsignacionesPorBus(@PathVariable UUID idBus) {
+        List<BAsignacionDTO> asignaciones = asignacionService.obtenerAsignacionesPorBus(idBus);
+        return ResponseEntity.ok(asignaciones);
+    }
+
+
     // Obtener asignaciones por conductor
     @GetMapping("/conductor/{idConductor}")
     public ResponseEntity<List<BAsignacionDTO>> obtenerAsignacionesPorConductor(@PathVariable UUID idConductor) {

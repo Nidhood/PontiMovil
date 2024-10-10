@@ -98,4 +98,13 @@ public class AsignacionService {
     public List<String> obtenerDiasDisponibles(UUID idBus) {
         return asignacionRepository.findDiasSemanaDisponibleByBusId(idBus);
     }
+
+    // En AsignacionService.java
+    public List<BAsignacionDTO> obtenerAsignacionesPorBus(UUID idBus) {
+        return asignacionRepository.findByBusId(idBus)
+                .stream()
+                .map(this::mapToAsignacionDTO)
+                .collect(Collectors.toList());
+    }
+
 }
