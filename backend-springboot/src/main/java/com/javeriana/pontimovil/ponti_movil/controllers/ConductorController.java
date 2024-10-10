@@ -26,11 +26,8 @@ public class ConductorController {
 
     // Métodos:
     @GetMapping
-    public ModelAndView obtenerConductores() {
-        List<Conductor> conductores = conductorService.obtenerConductores();
-        ModelAndView conductoresModelo = new ModelAndView("coordinator/c-gestionar-conductores");
-        conductoresModelo.addObject("conductores", conductores);
-        return conductoresModelo;
+    public  List<Conductor> obtenerConductores() {
+        return conductorService.obtenerConductores();
     }
 
     @GetMapping("/{id}")
@@ -71,9 +68,8 @@ public class ConductorController {
         return new RedirectView("/conductores");
     }
 
-    @GetMapping("/{id}/eliminar")
-    public Object eliminarConductor(@PathVariable UUID id) {
+    @DeleteMapping("/{id}/eliminar")
+    public void eliminarConductor(@PathVariable UUID id) {
         conductorService.eliminarConductor(id);
-        return new RedirectView("/conductores");
     }
 }

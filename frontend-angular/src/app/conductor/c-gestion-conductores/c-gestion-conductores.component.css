@@ -1,89 +1,14 @@
-h1{
-    position: sticky;
-    top: 0;
-    background-color: #e30613;
-    color: #ffffff;
-    padding: 20px;
+.nuevoConductor{
+    text-align: right;
+}
+p-table{
+    padding: 5%;
+}
+tr td{
     text-align: center;
-    border-radius: 5px 5px 0 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  }
 
-body {
-    background-size: cover;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    color: #333;
-}
-
-table.entity-list {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
-}
-
-table.entity-list th,
-table.entity-list td {
-    padding: 12px 15px;
-    text-align: left;
-}
-
-table.entity-list thead th {
-    background-color: #e30613;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    border-bottom: 2px solid #ccc;
-}
-
-table.entity-list tbody tr {
-    border-bottom: 1px solid #ddd;
-}
-
-table.entity-list tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-table.entity-list tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-.Editar{
-    color: #1a3417;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.Eliminar {
-    color: #e30613;
-    text-decoration: none;
-    font-weight: bold;
-    float: right;
-}
-
-table.entity-list tbody td a:hover {
-    text-decoration: underline;
-}
-
- .btnNuevo {
-    background-color: #e30613;
-    color: #ffffff;
-    padding: 10px 20px;
-    margin-bottom: 20px;
-    border-radius: 4px;
+  tr th{
     text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-    border-style:groove;
-    border-color: #000000;
-    float: right;
-}
 
-.btnNuevo:hover {
-    background-color: #c00c11;
-    border-color: #c00c11;
-}
+  }

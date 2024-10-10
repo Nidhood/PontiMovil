@@ -1,0 +1,12 @@
+<div>
+  <h1 class="titulo">Gestionar Conductores</h1>
+
+  <ng-container *ngIf="conductores$ | async as conductores">
+    <app-c-gestion-conductores 
+      *ngIf="conductores.length > 0" 
+      [conductores]="conductores">
+    </app-c-gestion-conductores>
+
+    <p *ngIf="conductores.length === 0">No hay conductores disponibles</p>
+  </ng-container>
+</div>

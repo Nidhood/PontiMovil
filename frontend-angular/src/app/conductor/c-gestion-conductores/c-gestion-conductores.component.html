@@ -1,33 +1,42 @@
-<h1 class="titulo">Gestionar Conductores</h1>
-<button class="btnNuevo" routerLink="/conductores/crear">Nuevo conductor +</button>
+<div>
+  <div class="nuevoConductor">
+    <p-button label="Nuevo conductor" icon="pi pi-user-plus" severity="danger" (onClick)="nuevoConductor()" />
+  </div>
+  <p-toast />
+  <p-confirmDialog />
+  <div>
+    
+    <p-table [value]="conductores" [paginator]="true" [rows]="5" [responsiveLayout]="'scroll'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Cédula</th>
+          <th>Teléfono</th>
+          <th>Editar buses</th>
+          <th>Editar conductor</th>
+          <th>Eliminar</th>
+        </tr>
+      </ng-template>
 
-<table class="entity-list">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Cédula</th>
-      <th>Teléfono</th>
-      <th>Editar buses</th>
-      <th>Editar conductor</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let conductor of conductores">
-      <tr *ngIf="conductor.nombre">
-        <td>{{ conductor.nombre }}</td>
-        <td>{{ conductor.apellido }}</td>
-        <td>{{ conductor.cedula }}</td>
-        <td>{{ conductor.telefono }}</td>
-        <td>
-          <a class="Editar" [routerLink]="['/asignaciones', conductor.id, 'editar']">Editar buses</a>
-        </td>
-        <td>
-          <a class="Editar" [routerLink]="['/conductores', conductor.id, 'editar']">Editar</a>
-          <a class="Eliminar" href="#" (click)="eliminarConductor(conductor.id)" 
-             onclick="return confirm('¿Está seguro que desea eliminar este conductor?')">Eliminar</a>
-        </td>
-      </tr>
-    </ng-container>
-  </tbody>
-</table>
+      <ng-template pTemplate="body" let-conductor>
+        <tr>
+          <td>{{ conductor?.nombre }}</td>
+          <td>{{ conductor?.apellido }}</td>
+          <td>{{ conductor?.cedula }}</td>
+          <td>{{ conductor?.telefono }}</td>
+          <td>
+            <p-button icon="pi pi-truck" severity="success" (click)="editarBuses(conductor)" />
+
+          </td>
+          <td>
+            <p-button icon="pi pi-user-edit" severity="info" (click)="editarConductor(conductor)" />
+          </td>
+          <td>            
+            <p-button icon="pi pi-times" severity="danger" (onClick)="confirm1($event, conductor)" [outlined]="true" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

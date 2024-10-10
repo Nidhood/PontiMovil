@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CCrearConductorComponent } from './c-crear-conductor.component';
+import { CEditarBusesComponent } from './c-editar-buses.component';
 
-describe('CCrearConductorComponent', () => {
-  let component: CCrearConductorComponent;
-  let fixture: ComponentFixture<CCrearConductorComponent>;
+describe('CEditarBusesComponent', () => {
+  let component: CEditarBusesComponent;
+  let fixture: ComponentFixture<CEditarBusesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CCrearConductorComponent]
+      imports: [CEditarBusesComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CCrearConductorComponent);
+    fixture = TestBed.createComponent(CEditarBusesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
