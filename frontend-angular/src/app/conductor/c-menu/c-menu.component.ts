@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AsyncPipe, NgIf, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { GestionarConductoresService } from '../../share/gestionar-conductores.service';
@@ -30,11 +30,14 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./c-menu.component.css']
 })
 export class CMenuComponent implements OnInit {
+  @Input() conductorEditar!: ConductorDTO;
   conductores$: Observable<ConductorDTO[]> | undefined;
+  conductor!: ConductorDTO;
   mostrarCrearConductor: boolean = false;
   mostrarEditarConductor: boolean = false;
   mostrarEditarBuses: boolean = false;
-  slectedConductor: ConductorDTO | null = null;
+  slectedConductor!: ConductorDTO;
+  idEditar!: string ;
   
   constructor(private gestionarConductoresService: GestionarConductoresService) {}
 
@@ -46,38 +49,31 @@ export class CMenuComponent implements OnInit {
     this.mostrarCrearConductor = true;
   }
 
-  volverAGestion(): void {
-    this.mostrarCrearConductor = false;
-  }
-
-  clickEditarConductor(){
-    // this.editarConductor = 
-  }
-
-  onEditarUnConductor(){
-    this.mostrarEditarConductor = true;
-  }
-
-  editarConductor(){
-
-  }
-
-  onEditarUnosBuses(){
+  onEditarBuses(conductor: ConductorDTO):void{
     this.mostrarEditarBuses = true;
   }
 
+  onEditarConductor(conductor: any): void{
+
+    if (!conductor) {
+      console.error("Conductor is undefined or null");
+      return;
+    }
+    this.conductorEditar = conductor;
+    this.mostrarEditarConductor = true;
+    console.log("mostrar editar = ",this.mostrarEditarConductor)
+    console.log("mostrar selected conductor = ",this.slectedConductor)
+
+  }
+
+  volverAGestion(): void {
+    this.mostrarCrearConductor = false;
+    this.mostrarEditarConductor = false;
+    this.mostrarEditarBuses = false;
+  }
   asignarBuses(){
 
   }
-
-  cerrarAsignarBuses(){
-    this.mostrarEditarBuses = false;
-  }
-
-  cerrarEditarConductor(){
-    this.mostrarEditarConductor = false;
-  }
-
 
 
 }

@@ -19,7 +19,7 @@ import { GestionarConductoresService } from '../../share/gestionar-conductores.s
     TableModule,
     ButtonModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
   ],
   templateUrl: './c-gestion-conductores.component.html',
   styleUrl: './c-gestion-conductores.component.css',
@@ -28,11 +28,12 @@ import { GestionarConductoresService } from '../../share/gestionar-conductores.s
 export class CGestionConductoresComponent implements OnChanges {
   @Input() conductores: ConductorDTO[] = [];
   @Output() crearNuevoConductor = new EventEmitter<void>();
-  @Output() editarUnConductor = new EventEmitter<ConductorDTO>();
+  @Output() editarConductor = new EventEmitter<ConductorDTO>();
   @Output() editarUnosBuses = new EventEmitter<ConductorDTO>();
 
+  conductor!:ConductorDTO;
 
-  constructor(private confirmationService: ConfirmationService, private messageService: MessageService, private gestionarConductoresService: GestionarConductoresService) { }
+  constructor(private confirmationService: ConfirmationService, private messageService: MessageService, private gestionarConductoresService: GestionarConductoresService, private router: Router) { }
 
   confirm1(event: Event, conductor: ConductorDTO) {
     this.confirmationService.confirm({
@@ -71,19 +72,13 @@ export class CGestionConductoresComponent implements OnChanges {
 
   editarBuses(conductor: ConductorDTO): void {
     // Implementa la lógica aquí
-    this.editarUnosBuses.emit(conductor);
+    return this.editarUnosBuses.emit(conductor);
   }
 
-  editarConductor(conductor: ConductorDTO): void {
-    // Implementa la lógica aquí
-    this.editarUnConductor.emit(conductor);
-
+  moverEditarConductor(conductor: ConductorDTO): void {
+    console.log("Editar conductor", conductor);
+    this.gestionarConductoresService.setConductorAEditar(conductor);
+    this.editarConductor.emit(conductor);
   }
-
-  // eliminarConductor(conductor: ConductorDTO): void {
-  //   // Implementa la lógica aquí  
-  //   this.gestionarConductoresService.eliminarConductor(conductor.id);
-  // }
-
 }
 

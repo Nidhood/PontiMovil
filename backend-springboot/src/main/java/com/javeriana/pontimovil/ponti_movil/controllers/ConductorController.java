@@ -40,17 +40,14 @@ public class ConductorController {
         conductorService.crearConductor(conductor);
     }
 
-    @GetMapping("/{id}/editar")
-    public ModelAndView actualizarConductor(@PathVariable UUID id) {
-        Conductor c = conductorService.obtenerConductorPorId(id);
-        ModelAndView conductorActualizar = new ModelAndView("coordinator/c-conductor-actualizar");
-        conductorActualizar.addObject("conductor", c);
-        return conductorActualizar;
-    }
+    // @PostMapping("/{id}/actualizar")
+    // public void actualizarConductor(@Valid Conductor conductor) {
+    //     conductorService.actualizarConductor(conductor.getId(), conductor);        
+    // }
 
     @PostMapping("/{id}/actualizar")
-    public void actualizarConductor(@Valid Conductor conductor) {
-        conductorService.actualizarConductor(conductor.getId(), conductor);        
+        public void actualizarConductor(@PathVariable UUID id, @RequestBody Conductor ruta) {
+            rutaService.actualizarConductor(id, ruta);
     }
 
     @DeleteMapping("/{id}/eliminar")
