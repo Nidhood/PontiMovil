@@ -8,10 +8,10 @@
   max-height: 85vh;
   overflow-y: auto;
   position: fixed;
-  top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
+  top: 50%;
+  left: 50%;
 }
 
 .modal-header {
@@ -23,19 +23,11 @@
   padding-bottom: 10px;
 }
 
-.modal-header h2 {
+.bus-placa {
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
   margin: 0;
-  display: flex;
-  align-items: center;
-}
-
-.modal-header .icon-bus {
-  margin-right: 10px;
-  font-size: 1.5rem;
-  color: #dc2626;
 }
 
 .modal-close {
@@ -59,63 +51,36 @@
 }
 
 .section h3 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   color: #444;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.section h3 .icon-user,
-.section h3 .icon-bus {
-  margin-right: 8px;
-  color: #dc2626;
 }
 
 .section ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .section ul li {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   background-color: #f9f9f9;
+  padding: 10px;
   margin-bottom: 10px;
+  border-radius: 5px;
 }
 
-.section ul li:last-child {
-  margin-bottom: 0;
-}
-
-.section ul li:not(.no-data):hover {
-  background-color: #f3f4f6;
-}
-
-.no-data {
-  text-align: center;
-  color: #888;
-  font-style: italic;
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
 }
 
 .edit-btn {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
   margin-top: 20px;
-}
-
-.p-button {
-  background-color: #607D8B !important;
-  color: white !important;
 }
 
 .p-button-secondary {
   background-color: #dc2626 !important;
-  border-color: #dc2626 !important;
-}
-
-.p-button-secondary:hover {
-  background-color: #b91c1c !important;
-  border-color: #b91c1c !important;
+  color: white !important;
 }

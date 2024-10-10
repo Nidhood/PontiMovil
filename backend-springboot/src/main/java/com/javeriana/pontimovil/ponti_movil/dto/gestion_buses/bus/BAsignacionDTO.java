@@ -12,5 +12,5 @@ public class BAsignacionDTO implements Serializable {
     private String id;
     private BConductorDTO conductor;
     private BBusDTO bus;
-    private BRutaDTO ruta; // Puede ser nulo si no hay ruta asignada
+    private BRutaDTO ruta;
 }

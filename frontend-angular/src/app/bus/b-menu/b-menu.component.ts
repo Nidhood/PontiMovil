@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 import { map } from 'rxjs/operators';
 import { BModuloAgregarBusComponent } from '../b-modulo-agregar-bus/b-modulo-agregar-bus.component';
 
+
 @Component({
   selector: 'app-b-menu',
   standalone: true,
@@ -43,6 +44,8 @@ export class BMenuComponent implements OnInit {
   options: AnimationOptions = {
     path: '/assets/animations/loading.json'  // Ruta de la animación JSON
   };
+
+  iconLoaded = false;
 
   constructor(private gestionarBusesService: GestionarBusesService) {}
 
@@ -86,10 +89,12 @@ export class BMenuComponent implements OnInit {
 
   cargarBuses() {
     this.isLoading = true;
+    console.log('Cargando buses...');
     this.gestionarBusesService.listaBuses().pipe(
       finalize(() => this.isLoading = false)
     ).subscribe(
       (buses: BusDTO[]) => {
+        console.log('Buses cargados:', buses);
         this.busesSubject.next(buses);
       },
       error => {
@@ -97,6 +102,7 @@ export class BMenuComponent implements OnInit {
       }
     );
   }
+
 
   guardarCambiosBus(busActualizado: BusDTO) {
     this.gestionarBusesService.actualizarBus(busActualizado).subscribe(
@@ -108,13 +114,23 @@ export class BMenuComponent implements OnInit {
     );
   }
 
+  eliminarBus(id: string) {
+    if (confirm('¿Estás seguro de que deseas eliminar este bus?')) {
+      this.gestionarBusesService.eliminarBus(id).subscribe(() => {
+        this.cargarBuses();  // Recargar la lista de buses después de eliminar
+        alert('Bus eliminado exitosamente');
+      }, error => console.error('Error al eliminar el bus:', error));
+    }
+  }
+
   guardarNuevoBus(busNuevo: BusDTO) {
     this.gestionarBusesService.crearBus(busNuevo).subscribe(
       () => {
-        this.cargarBuses();
-        this.cerrarAgregar();
+        console.log('Nuevo bus agregado, cargando buses...');  // Añade este log para confirmar que se llama este método
+        this.cargarBuses();  // Recargar la lista de buses después de agregar uno nuevo
       },
       error => console.error('Error al guardar el nuevo bus:', error)
     );
   }
+
 }

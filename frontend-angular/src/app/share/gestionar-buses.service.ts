@@ -53,4 +53,8 @@ export class GestionarBusesService {
   obtenerTodosLosConductores(): Observable<ConductorDTO[]> {
     return this.http.get<ConductorDTO[]>(`${environment.SERVE_URL}/conductores`);
   }
+
+  obtenerRutas() : Observable<RutaDTO[]> {
+    return this.http.get<RutaDTO[]>(`${environment.SERVE_URL}/rutas/dto`);
+  }
 }

@@ -18,7 +18,11 @@
     </div>
   </div>
 
-  <div class="stations-container">
+  <div *ngIf="isLoading" class="loading-container">
+    <p>Cargando...</p>
+  </div>
+
+  <div class="stations-container" *ngIf="!isLoading">
     <div class="station-list">
       <h3>Rutas Asignadas</h3>
       <p-pickList

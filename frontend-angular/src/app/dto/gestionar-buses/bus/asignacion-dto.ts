@@ -8,6 +8,6 @@ export class AsignacionDTO {
     public id: string,
     public conductor: ConductorDTO,
     public bus: BusDTO,
-    public ruta?: RutaDTO
+    public ruta: RutaDTO
   ) {}
 }

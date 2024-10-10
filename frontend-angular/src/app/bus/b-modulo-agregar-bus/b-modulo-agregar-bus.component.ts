@@ -4,7 +4,8 @@ import { InputTextModule } from 'primeng/inputtext'; // PrimeNG InputText
 import { ButtonModule } from 'primeng/button'; // PrimeNG Button
 import { FormsModule } from '@angular/forms'; // Angular Forms
 import { BusDTO } from '../../dto/gestionar-buses/bus/bus-dto'; // BusDTO import
-import { GestionarBusesService } from '../../share/gestionar-buses.service'; // Importar servicio
+import { GestionarBusesService } from '../../share/gestionar-buses.service';
+import {finalize} from 'rxjs'; // Importar servicio
 
 @Component({
   selector: 'app-b-modulo-agregar-bus',
@@ -37,17 +38,21 @@ export class BModuloAgregarBusComponent {
 
   guardarBus() {
     if (this.busData.placa && this.busData.modelo) {
-      // Enviar los datos del bus al servicio
       this.gestionarBusesService.crearBus(this.busData).subscribe({
         next: (busGuardado: BusDTO) => {
-          console.log('Bus guardado:', busGuardado);
-          this.busGuardado.emit(busGuardado); // Emitimos el bus guardado
-          this.cerrarFormulario(); // Cierra el modal
+          console.log('Bus guardado:', busGuardado);  // Añade este log para confirmar que se guarda el bus
+          this.busGuardado.emit(busGuardado);  // Emitir el bus guardado al componente padre
+          this.cerrarFormulario();
+          window.location.reload();
         },
         error: (error) => {
           console.error('Error al guardar el bus:', error);
         }
       });
+    } else {
+      alert('Por favor, complete todos los campos.');
     }
   }
+
+
 }

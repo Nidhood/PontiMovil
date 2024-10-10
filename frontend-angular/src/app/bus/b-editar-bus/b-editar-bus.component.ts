@@ -6,12 +6,13 @@ import { BusDTO } from '../../dto/gestionar-buses/bus/bus-dto';
 import { ConductorDTO } from '../../dto/gestionar-buses/bus/conductor-dto';
 import { RutaDTO } from '../../dto/gestionar-buses/bus/ruta-dto';
 import { AsignacionDTO } from '../../dto/gestionar-buses/bus/asignacion-dto';
-import {PickListModule} from 'primeng/picklist';
+import { PickListModule } from 'primeng/picklist';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-b-editar-bus',
   standalone: true,
-  imports: [FormsModule, Button, PickListModule],
+  imports: [FormsModule, Button, PickListModule, NgIf],
   templateUrl: './b-editar-bus.component.html',
   styleUrls: ['./b-editar-bus.component.css']
 })
@@ -24,33 +25,34 @@ export class BEditarBusComponent {
   rutasNoAsignadas: RutaDTO[] = [];
   conductoresAsignados: ConductorDTO[] = [];
   conductoresNoAsignados: ConductorDTO[] = [];
+  isLoading = true;
 
   constructor(private gestionarBusesService: GestionarBusesService) {}
 
   ngOnInit() {
     if (this.bus) {
-      this.cargarRutas();
-      this.cargarConductores();
+      this.cargarAsignaciones();
     }
   }
 
-  cargarRutas() {
-    const idsRutasAsignadas = this.bus.rutas.map(ruta => ruta.id);
+  cargarAsignaciones() {
+    this.isLoading = true;
 
-    this.gestionarBusesService.obtenerRutasPorBus(this.bus.id).subscribe(
-      (rutas: RutaDTO[]) => {
-        this.rutasAsignadas = rutas.filter(ruta => idsRutasAsignadas.includes(ruta.id));
-        this.rutasNoAsignadas = rutas.filter(ruta => !idsRutasAsignadas.includes(ruta.id));
-      },
-      error => console.error('Error al cargar rutas:', error)
-    );
-  }
-
-  cargarConductores() {
     this.gestionarBusesService.obtenerAsignacionesPorBus(this.bus.id).subscribe(
       (asignaciones: AsignacionDTO[]) => {
+        const idsRutasAsignadas = asignaciones.map(asignacion => asignacion.ruta?.id);
         const idsConductoresAsignados = asignaciones.map(asignacion => asignacion.conductor.id);
 
+        // Obtener rutas y filtrar asignadas/no asignadas
+        this.gestionarBusesService.obtenerRutas().subscribe(
+          (rutas: RutaDTO[]) => {
+            this.rutasAsignadas = rutas.filter(ruta => idsRutasAsignadas.includes(ruta.id));
+            this.rutasNoAsignadas = rutas.filter(ruta => !idsRutasAsignadas.includes(ruta.id));
+          },
+          error => console.error('Error al cargar rutas:', error)
+        );
+
+        // Obtener conductores y filtrar asignados/no asignados
         this.gestionarBusesService.obtenerTodosLosConductores().subscribe(
           (conductores: ConductorDTO[]) => {
             this.conductoresAsignados = conductores.filter(conductor => idsConductoresAsignados.includes(conductor.id));
@@ -58,20 +60,33 @@ export class BEditarBusComponent {
           },
           error => console.error('Error al cargar conductores:', error)
         );
+
+        this.isLoading = false;
       },
-      error => console.error('Error al cargar asignaciones:', error)
+      error => {
+        console.error('Error al cargar asignaciones:', error);
+        this.isLoading = false;
+      }
     );
   }
 
   onMoveToTarget(event: any) {
-    event.items.forEach((ruta: RutaDTO) => {
-      this.rutasAsignadas.push(ruta);
+    event.items.forEach((item: any) => {
+      if (item instanceof RutaDTO) {
+        this.rutasAsignadas.push(item);
+      } else if (item instanceof ConductorDTO) {
+        this.conductoresAsignados.push(item);
+      }
     });
   }
 
   onMoveToSource(event: any) {
-    event.items.forEach((ruta: RutaDTO) => {
-      this.rutasNoAsignadas.push(ruta);
+    event.items.forEach((item: any) => {
+      if (item instanceof RutaDTO) {
+        this.rutasNoAsignadas.push(item);
+      } else if (item instanceof ConductorDTO) {
+        this.conductoresNoAsignados.push(item);
+      }
     });
   }
 

@@ -25,10 +25,20 @@ h1 {
   height: 300px;
 }
 
-button {
+.p-button-text {
   margin-right: 10px;
 }
 
-.p-button-text {
-  color: #e30613;
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
 }
+
+.p-button-text .pi {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
