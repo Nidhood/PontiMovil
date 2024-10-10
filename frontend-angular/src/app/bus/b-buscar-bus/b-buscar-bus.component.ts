@@ -20,7 +20,10 @@ export class BBuscarBusComponent {
   @Output() search = new EventEmitter<string>();  // Emite el término de búsqueda
 
   onSearch() {
-    this.search.emit(this.searchTerm);  // Emitir el término de búsqueda
+    if (this.searchTerm.trim()) {
+      this.search.emit(this.searchTerm);  // Emitir el término de búsqueda
+      this.limpiarCampo();  // Limpiar el campo de búsqueda
+    }
   }
 
   options: AnimationOptions = {
@@ -44,5 +47,9 @@ export class BBuscarBusComponent {
       this.animationItem.setSpeed(2);  // Aumenta la velocidad de la animación
       this.animationItem.play();
     }
+  }
+
+  limpiarCampo(): void {
+    this.searchTerm = '';  // Limpiar el término de búsqueda
   }
 }

@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DialogModule } from 'primeng/dialog'; // PrimeNG Dialog
 import { InputTextModule } from 'primeng/inputtext'; // PrimeNG InputText
 import { ButtonModule } from 'primeng/button'; // PrimeNG Button
 import { FormsModule } from '@angular/forms'; // Angular Forms
+import { BusDTO } from '../../dto/gestionar-buses/bus/bus-dto'; // BusDTO import
+import { GestionarBusesService } from '../../share/gestionar-buses.service'; // Importar servicio
 
 @Component({
   selector: 'app-b-modulo-agregar-bus',
@@ -19,10 +21,11 @@ import { FormsModule } from '@angular/forms'; // Angular Forms
 export class BModuloAgregarBusComponent {
   displayModal: boolean = false; // Controla la visibilidad del modal
 
-  busData = {
-    placa: '',
-    modelo: ''
-  };
+  busData: BusDTO = new BusDTO('', '', '', [], []); // Inicializa el objeto bus
+
+  @Output() busGuardado = new EventEmitter<BusDTO>(); // Emite el bus guardado al componente principal
+
+  constructor(private gestionarBusesService: GestionarBusesService) {}
 
   abrirFormulario() {
     this.displayModal = true; // Abre el modal cuando se hace clic en "Agregar Bus"
@@ -33,8 +36,18 @@ export class BModuloAgregarBusComponent {
   }
 
   guardarBus() {
-    console.log('Bus guardado:', this.busData);
-    // Aquí enviarías los datos del bus al backend
-    this.cerrarFormulario(); // Cierra el modal tras guardar el bus
+    if (this.busData.placa && this.busData.modelo) {
+      // Enviar los datos del bus al servicio
+      this.gestionarBusesService.crearBus(this.busData).subscribe({
+        next: (busGuardado: BusDTO) => {
+          console.log('Bus guardado:', busGuardado);
+          this.busGuardado.emit(busGuardado); // Emitimos el bus guardado
+          this.cerrarFormulario(); // Cierra el modal
+        },
+        error: (error) => {
+          console.error('Error al guardar el bus:', error);
+        }
+      });
+    }
   }
 }

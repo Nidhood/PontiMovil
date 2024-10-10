@@ -11,19 +11,24 @@
     <div class="section">
       <h3><i class="icon-user"></i> Conductores Asignados:</h3>
       <ul>
+        <!-- Validamos que existan conductores asignados -->
         <li *ngFor="let conductor of bus?.conductores">{{ conductor.nombre }} {{ conductor.apellido }}</li>
+        <li *ngIf="!bus?.conductores?.length">No hay conductores asignados a este bus.</li>
       </ul>
     </div>
 
     <div class="section">
       <h3><i class="icon-bus"></i> Rutas Asignadas:</h3>
       <ul>
+        <!-- Validamos que existan rutas asignadas -->
         <li *ngFor="let ruta of bus?.rutas">{{ ruta.codigo }}</li>
+        <li *ngIf="!bus?.rutas?.length">No hay rutas asignadas a este bus.</li>
       </ul>
     </div>
   </div>
 
   <div class="edit-btn">
-    <button class="p-button p-button-secondary" (click)="editarBus()">Editar</button>
+    <!-- Usamos botones de PrimeNG para consistencia -->
+    <button pButton label="Editar" icon="pi pi-pencil" class="p-button-secondary" (click)="editarBus()"></button>
   </div>
 </div>

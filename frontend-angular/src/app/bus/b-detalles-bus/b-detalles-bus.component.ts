@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { BusDTO } from '../../dto/gestionar-buses/bus/bus-dto';
+import { ButtonModule } from 'primeng/button'; // Importamos PrimeNG para los botones
 
 @Component({
   selector: 'app-b-detalles-bus',
   standalone: true,
-  imports: [NgForOf],
+  imports: [NgForOf, NgIf, ButtonModule],  // Añadimos NgIf para controles condicionales
   templateUrl: './b-detalles-bus.component.html',
   styleUrls: ['./b-detalles-bus.component.css']
 })

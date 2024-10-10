@@ -19,6 +19,7 @@ export class BAgregarBusComponent {
   guardarBus() {
     if (this.bus.placa && this.bus.modelo) {
       this.save.emit(this.bus);  // Emitir el bus para guardarlo
+      this.limpiarFormulario();  // Limpiar el formulario después de guardar
     } else {
       alert('Por favor, complete todos los campos.');
     }
@@ -26,5 +27,10 @@ export class BAgregarBusComponent {
 
   cancelar() {
     this.cancel.emit();  // Emitir un evento de cancelación
+    this.limpiarFormulario();  // Limpiar el formulario al cancelar
+  }
+
+  limpiarFormulario() {
+    this.bus = new BusDTO('', '', '', [], []);  // Reiniciar el bus
   }
 }

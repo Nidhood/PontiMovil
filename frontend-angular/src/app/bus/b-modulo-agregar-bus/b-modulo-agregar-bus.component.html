@@ -20,7 +20,7 @@
 
   <!-- Botones de acción -->
   <p-footer>
-    <button pButton label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarBus()"></button>
+    <button pButton label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarBus()" [disabled]="!busData.placa || !busData.modelo"></button>
     <button pButton label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="cerrarFormulario()"></button>
   </p-footer>
 </p-dialog>
