@@ -1,7 +1,7 @@
 <div class="seccion">
   <h1 class="titulo">Gestionar Conductores</h1>
 
-  <ng-container *ngIf="!mostrarCrearConductor && !mostrarEditarConductor && !mostrarEditarBuses">
+  <!-- <ng-container *ngIf="!mostrarCrearConductor && !mostrarEditarConductor && !mostrarEditarBuses">
     <ng-container *ngIf="conductores$ | async as conductores">
       <app-c-gestion-conductores *ngIf="conductores.length > 0" [conductores]="conductores"
         (crearNuevoConductor)="onCrearNuevoConductor()">
@@ -9,11 +9,12 @@
 
       <p *ngIf="conductores.length === 0">No hay conductores disponibles</p>
     </ng-container>
-  </ng-container>
-
-  <ng-container *ngIf="mostrarCrearConductor">
+  </ng-container> -->
+  <!-- *ngIf="mostrarCrearConductor" -->
+  <ng-container >
     <app-c-crear-conductor></app-c-crear-conductor>
-    <p-button icon="pi pi-arrow-left" severity="danger" (click)="volverAGestion()" label="Volver" />
+    <!-- <p-button icon="pi pi-arrow-left" severity="danger" (click)="volverAGestion()" label="Volver" /> -->
+    <button type="submit" (click)="volverAGestion()">Volver</button>
   </ng-container>
 
   <ng-container *ngIf="mostrarEditarConductor">

@@ -35,20 +35,9 @@ public class ConductorController {
         return conductorService.obtenerConductorPorId(id);
     }
 
-    @GetMapping("/crear")
-    public ModelAndView mostrarFormularioCrearConductor() {
-        ModelAndView mav = new ModelAndView("coordinator/c-conductor-crear");
-        mav.addObject("conductor", new Conductor());
-        return mav;
-    }
-
     @PostMapping("/crear")
-    public Object crearConductor(@Valid @ModelAttribute("conductor") Conductor conductor, BindingResult result) {
-        if (result.hasErrors()) {
-            return new ModelAndView("coordinator/c-conductor-crear");
-        }
+    public void crearConductor(@RequestBody Conductor conductor) {
         conductorService.crearConductor(conductor);
-        return new RedirectView("/conductores");
     }
 
     @GetMapping("/{id}/editar")
@@ -59,13 +48,9 @@ public class ConductorController {
         return conductorActualizar;
     }
 
-    @PostMapping(value = "/actualizar")
-    public Object actualizarConductor(@Valid Conductor conductor, BindingResult result) {
-        if (result.hasErrors()) {
-            return new ModelAndView("coordinator/c-conductor-actualizar");
-        }
-        conductorService.actualizarConductor(conductor.getId(), conductor);
-        return new RedirectView("/conductores");
+    @PostMapping("/{id}/actualizar")
+    public void actualizarConductor(@Valid Conductor conductor) {
+        conductorService.actualizarConductor(conductor.getId(), conductor);        
     }
 
     @DeleteMapping("/{id}/eliminar")

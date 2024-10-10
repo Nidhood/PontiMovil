@@ -45,12 +45,16 @@ export class CGestionConductoresComponent implements OnChanges {
       rejectButtonStyleClass: "p-button-text",
       accept: () => {
         this.messageService.add({ severity: 'info', summary: 'Confirmado', detail: 'Ha aceptado eliminar' });
-        this.gestionarConductoresService.eliminarConductor(conductor.id);
-
+        this.gestionarConductoresService.eliminarConductor(conductor.id).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Conductor eliminado' });
+            this.conductores = this.conductores.filter(c => c.id !== conductor.id);
+          },
+          error: (error) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el conductor' });
+          }
+        });
       },
-      reject: () => {
-        this.messageService.add({ severity: 'error', summary: 'Rechazado', detail: 'You have rejected', life: 3000 });
-      }
     });
   }
 

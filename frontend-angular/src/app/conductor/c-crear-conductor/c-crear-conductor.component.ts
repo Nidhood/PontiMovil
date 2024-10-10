@@ -10,9 +10,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConductorDTO } from '../../dto/gestionar-conductores/conductor-dto';
 import { CrearConductorDTO } from '../../dto/gestionar-conductores/crear-conductor-dto';
 import { GestionarConductoresService } from '../../share/gestionar-conductores.service';
+import { DireccionDTO } from '../../dto/gestionar-conductores/direccion-dto';
 
-interface tipoVia{
-  label:string;
+interface tipoVia {
+  label: string;
   value: string;
 }
 
@@ -34,51 +35,63 @@ interface tipoVia{
   styleUrl: './c-crear-conductor.component.css'
 })
 export class CCrearConductorComponent implements OnInit {
-  viaSeleccionada: string | undefined;
-  calles !: tipoVia[];
-  registroForm!: FormGroup;
+  conductorForm!: FormGroup;
 
+  constructor(private fb: FormBuilder, private gestionarConductoresService: GestionarConductoresService) {}
 
-  constructor(private fb: FormBuilder, private gestionarConductoresService: GestionarConductoresService) { }
-
-  ngOnInit(): void {
-    this.calles = [{ label: "Calle", value: "Calle" },
-    { label: "Carrera", value: "Carrera" },
-    { label: "Avenida", value: "Avenida" },
-    { label: "Diagonal", value: "Diagonal" },
-    { label: "Transversal", value: "Transversal" },
-    { label: "Circular", value: "Circular" },
-    { label: "Manzana", value: "Manzana" },
-    { label: "Kilómetro", value: "Kilómetro" }];
-    throw new Error('Method not implemented.');
-
-    // Initialize the form
-    this.registroForm = this.fb.group({
+  ngOnInit() {
+    this.conductorForm = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       cedula: ['', Validators.required],
       telefono: ['', Validators.required],
-      tipoVia: [null, Validators.required]  // Add form control for dropdown
+      tipoVia: ['', Validators.required],
+      numeroVia: ['', Validators.required],
+      numero: ['', Validators.required],
+      barrio: ['', Validators.required],
+      localidad: ['', Validators.required]
     });
   }
-  onSubmit() {
-    if (this.registroForm.valid) {
-      // Crear objeto conductor con los datos del formulario
-      const conductor: CrearConductorDTO = {
-        nombre: this.registroForm.value.nombre,
-        apellido: this.registroForm.value.apellido,
-        cedula: this.registroForm.value.cedula,
-        telefono: this.registroForm.value.telefono,
-        direccion: {
-          tipoVia: this.registroForm.value.tipoVia,
-          numeroVia: this.registroForm.value.numeroVia,
-          numero: this.registroForm.value.numero,
-          barrio: this.registroForm.value.barrio,
-          localidad: this.registroForm.value.localidad,
-        }
-      };
-      this.gestionarConductoresService.crearConductor(conductor);
+
+  crearConductor() {
+    if (this.conductorForm.valid) {
+      console.log('Formulario válido:', this.conductorForm.value);
+      
+      const direccion = new DireccionDTO(
+        this.conductorForm.value.tipoVia,
+        this.conductorForm.value.numeroVia,
+        this.conductorForm.value.numero,
+        this.conductorForm.value.localidad,
+        this.conductorForm.value.barrio
+      );
+
+      const nuevoConductor = new CrearConductorDTO(
+        this.conductorForm.value.nombre,
+        this.conductorForm.value.apellido,
+        this.conductorForm.value.cedula,
+        this.conductorForm.value.telefono,
+        direccion
+      );
+
+      console.log('Nuevo conductor:', nuevoConductor);
+
+      this.gestionarConductoresService.crearConductor(nuevoConductor)
+        .subscribe({
+          next: (response) => {
+            console.log('Conductor creado con éxito:', response);
+            this.conductorForm.reset();
+          },
+          error: (error) => {
+            console.error('Error al crear el conductor:', error);
+          }
+        });
+    } else {
+      console.log('Formulario inválido');
+      // Opcionalmente, marcar todos los campos como tocados para mostrar errores
+      Object.values(this.conductorForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
     }
-    
   }
 }
+

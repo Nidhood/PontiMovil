@@ -1,77 +1,46 @@
-<div class="card">
-    <h2>Crear nuevo conductor</h2>
-    <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
-        <div class="field">
-            <label htmlFor="nombre">Nombre</label>
-            <input pInputText id="nombre" formControlName="nombre" />
-            <small *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" class="p-error">
-                Nombre es requerido
-            </small>
-        </div>
-        <div class="field">
-            <label htmlFor="apellido">Apellido</label>
-            <input pInputText id="apellido" formControlName="apellido" />
-            <small *ngIf="registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched"
-                class="p-error">
-                Apellido es requerido
-            </small>
-        </div>
+<div class="crearConductor">
+  <h2>Crear nuevo conductor</h2>
 
-        <div class="field">
-            <label htmlFor="cedula">Cédula</label>
-            <input pInputText id="cedula" formControlName="cedula" />
-            <small *ngIf="registroForm.get('cedula')?.invalid && registroForm.get('cedula')?.touched" class="p-error">
-                Cédula es requerida
-            </small>
-        </div>
+  <form [formGroup]="conductorForm" (ngSubmit)="crearConductor()">
+    <label for="nombreConductor">Nombre: </label>
+    <input type="text" formControlName="nombre" id="nombreConductor" required>
 
-        <div class="field">
-            <label htmlFor="telefono">Teléfono</label>
-            <p-inputMask mask="(999) 999-9999" formControlName="telefono"></p-inputMask>
-            <small *ngIf="registroForm.get('telefono')?.invalid && registroForm.get('telefono')?.touched"
-                class="p-error">
-                Teléfono es requerido
-            </small>
-        </div>
-        <div class="direccion">
-            <div class="field">
-                <label htmlFor="tipoVia">Tipo de Via</label>
-                <p-dropdown [options]="calles" formControlName="tipoVia" [showClear]="true" optionLabel="label"
-                    placeholder="Seleccione un tipo de via"></p-dropdown>
-                <small *ngIf="registroForm.get('tipoVia')?.invalid && registroForm.get('tipoVia')?.touched"
-                    class="p-error">
-                    Tipo de via es requerido
-                </small>
-            </div>
-            <div class="field">
-                <label htmlFor="numeroVia">Número de vía</label>
-                <input pInputText id="numeroVia" formControlName="numeroVia"/>
-                <small *ngIf="registroForm.get('direccion.numeroVia')?.invalid && registroForm.get('direccion.numeroVia')?.touched" class="p-error">
-                  Número de vía es requerido
-                </small>
-              </div>
-              <div class="field">
-                <label htmlFor="numero">Número</label>
-                <input pInputText id="numero" formControlName="numero"/>
-                <small *ngIf="registroForm.get('direccion.numero')?.invalid && registroForm.get('direccion.numero')?.touched" class="p-error">
-                  Número es requerido
-                </small>
-              </div>
-              <div class="field">
-                <label htmlFor="barrio">Barrio</label>
-                <input pInputText id="barrio" formControlName="barrio" />
-                <small *ngIf="registroForm.get('direccion.barrio')?.invalid && registroForm.get('direccion.barrio')?.touched" class="p-error">
-                  Barrio es requerido
-                </small>
-              </div>
-              <div class="field">
-                <label htmlFor="localidad">Localidad</label>
-                <input pInputText id="localidad" formControlName="localidad" />
-                <small *ngIf="registroForm.get('direccion.localidad')?.invalid && registroForm.get('direccion.localidad')?.touched" class="p-error">
-                  Localidad es requerida
-                </small>
-              </div>
-        </div>
-        <p-button type="submit" pButton label="Submit" [disabled]="registroForm.invalid"></p-button>
-    </form>
+    <label for="apellidoConductor">Apellido: </label>
+    <input type="text" formControlName="apellido" id="apellidoConductor" required>
+
+    <label for="cedulaConductor">Cédula: </label>
+    <input type="text" formControlName="cedula" id="cedulaConductor" required>
+
+    <label for="telConductor">Teléfono: </label>
+    <input type="text" formControlName="telefono" id="telConductor" required>
+
+    <label>Dirección: </label>
+    <div class="direccion-container">
+      <label for="tipoVia">Tipo de vía: </label>
+      <select id="tipoVia" formControlName="tipoVia" required>
+        <option value="Calle">Calle</option>
+        <option value="Carrera">Carrera</option>
+        <option value="Avenida">Avenida</option>
+        <option value="Diagonal">Diagonal</option>
+        <option value="Transversal">Transversal</option>
+        <option value="Circular">Circular</option>
+        <option value="Manzana">Manzana</option>
+        <option value="Kilómetro">Kilómetro</option>
+      </select>
+
+      <label class="direccion" for="numeroVia">Número: </label>
+      <input type="text" formControlName="numeroVia" id="numeroVia" placeholder="Número" required>
+
+      <label class="direccion" for="numero">#</label>
+      <input type="text" formControlName="numero" id="numero" placeholder="Número" required>
+
+      <label class="direccion" for="barrio">Barrio: </label>
+      <input type="text" formControlName="barrio" id="barrio" required>
+
+      <label class="direccion" for="localidad">Localidad: </label>
+      <input type="text" formControlName="localidad" id="localidad" required>
+    </div>
+
+    <button type="submit" [disabled]="conductorForm.invalid">Crear</button>
+  </form>
 </div>

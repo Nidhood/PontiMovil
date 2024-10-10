@@ -23,7 +23,7 @@ export class GestionarConductoresService {
   }
 
   crearConductor(conductor: CrearConductorDTO):Observable<void> {
-    return this.http.delete<void>(`${environment.SERVE_URL}/conductores/crear`);
+    return this.http.post<void>(`${environment.SERVE_URL}/conductores/crear`, conductor);
   }
   
 }
