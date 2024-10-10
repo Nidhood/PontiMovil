@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {CardModule} from 'primeng/card';
-import {EstacionDTO} from '../../dto/gestionar-rutas/estacion/estacion-dto';
+import {REstacionDto} from '../../dto/gestionar-rutas/estacion/r-estacion-dto';
 
 @Component({
   selector: 'app-r-modulo-estacion',
@@ -13,6 +13,6 @@ import {EstacionDTO} from '../../dto/gestionar-rutas/estacion/estacion-dto';
 })
 
 export class RModuloEstacionComponent {
-  @Input() estacion: EstacionDTO | null = null;
+  @Input() estacion: REstacionDto | null = null;
 }
 

@@ -3,15 +3,26 @@ import {Button} from 'primeng/button';
 import {CalendarModule} from 'primeng/calendar';
 import {InputTextModule} from 'primeng/inputtext';
 import {MultiSelectModule} from 'primeng/multiselect';
-import {NgIf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {PaginatorModule} from 'primeng/paginator';
 import {PickListModule} from 'primeng/picklist';
 import {PrimeTemplate} from 'primeng/api';
 import {RModuloEstacionComponent} from '../r-modulo-estacion/r-modulo-estacion.component';
-import {RutaDto} from '../../dto/gestionar-rutas/ruta/ruta-dto';
-import {HorarioDTO} from '../../dto/gestionar-rutas/ruta/horario-dto';
-import {EstacionDTO} from '../../dto/gestionar-rutas/estacion/estacion-dto';
+import {RHorarioDto} from '../../dto/gestionar-rutas/ruta-recibida/r-horario-dto';
+import {REstacionRecibidaDto} from '../../dto/gestionar-rutas/ruta-recibida/r-estacion-recibida-dto';
 import {GestionarRutasService} from '../../share/gestionar-rutas.service';
+import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ToastModule} from "primeng/toast";
+import { MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+import {SkeletonModule} from 'primeng/skeleton';
+import {BehaviorSubject} from 'rxjs';
+import {RRutaEnviadaDto} from '../../dto/gestionar-rutas/ruta-enviada/r-ruta-enviada-dto';
+
+interface DiaSemana {
+  nombre: string;
+  value: string;
+}
 
 @Component({
   selector: 'app-r-agregar-ruta',
@@ -25,52 +36,62 @@ import {GestionarRutasService} from '../../share/gestionar-rutas.service';
     PaginatorModule,
     PickListModule,
     PrimeTemplate,
-    RModuloEstacionComponent
+    RModuloEstacionComponent,
+    ConfirmDialogModule,
+    ToastModule,
+    SkeletonModule,
+    NgForOf,
+    AsyncPipe,
+    NgStyle
   ],
   templateUrl: './r-agregar-ruta.component.html',
-  styleUrl: './r-agregar-ruta.component.css'
+  styleUrl: './r-agregar-ruta.component.css',
+  providers: [MessageService, ConfirmationService]
 })
+
 export class RAgregarRutaComponent {
 
-  @Input() ruta: RutaDto = new RutaDto(
+  @Input() ruta: RRutaEnviadaDto = new RRutaEnviadaDto(
     '', // id
     '', // código
-    new HorarioDTO('', ''), // horario
+    new RHorarioDto('', '', ''), // horario
     [], // días de la semana
-    [], // estaciones
-    [], // buses
-    [] // conductores
+    [] // estaciones
   );
   @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<RutaDto>();
+  @Output() save = new EventEmitter<RRutaEnviadaDto>();
 
-  estacionesAsignadas: EstacionDTO[] = [];
-  estacionesNoAsignadas: EstacionDTO[] = [];
+  estacionesAsignadas: REstacionRecibidaDto[] = [];
+  estacionesNoAsignadas: REstacionRecibidaDto[] = [];
 
-  diasOptions!: any[];
-  selectedDias!: string[];
+  diasOptions!: DiaSemana[];
+  selectedDias!: DiaSemana[];
 
   horaInicioDate: Date = new Date();
   horaFinDate: Date = new Date();
 
-  constructor(private gestionarRutasService: GestionarRutasService) {}
+  public loadingEstaciones$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  skeletonItems: any[] = Array(5).fill({});
+
+  constructor(
+    private gestionarRutasService: GestionarRutasService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   ngOnInit() {
-    if (this.ruta) {
-      this.cargarEstaciones();
-      this.horaInicioDate = this.stringToDate(this.ruta.horario.horaInicio);
-      this.horaFinDate = this.stringToDate(this.ruta.horario.horaFin);
-      this.selectedDias = this.ruta.diasSemana;
-      this.diasOptions = [
-        { label: 'Lunes', value: 'Lunes' },
-        { label: 'Martes', value: 'Martes' },
-        { label: 'Miércoles', value: 'Miércoles' },
-        { label: 'Jueves', value: 'Jueves' },
-        { label: 'Viernes', value: 'Viernes' },
-        { label: 'Sábado', value: 'Sábado' },
-        { label: 'Domingo', value: 'Domingo' }
-      ];
-    }
+    this.diasOptions = [
+      { nombre: 'Lunes', value: 'Lunes' },
+      { nombre: 'Martes', value: 'Martes' },
+      { nombre: 'Miércoles', value: 'Miercoles' },
+      { nombre: 'Jueves', value: 'Jueves' },
+      { nombre: 'Viernes', value: 'Viernes' },
+      { nombre: 'Sábado', value: 'Sabado' },
+      { nombre: 'Domingo', value: 'Domingo' }
+    ];
+    this.cargarEstaciones();
+    this.horaInicioDate = this.stringToDate("00:00");
+    this.horaFinDate = this.stringToDate("00:00");
   }
 
   stringToDate(timeString: string): Date {
@@ -86,25 +107,37 @@ export class RAgregarRutaComponent {
   }
 
   cargarEstaciones() {
-    if (this.ruta && this.ruta.id) {
-      this.gestionarRutasService.obtenerEstacionesPorRuta(this.ruta.id).subscribe(
-        (estaciones: EstacionDTO[]) => {
-          this.estacionesAsignadas = estaciones.filter(e => e.dentroRuta);
-          this.estacionesNoAsignadas = estaciones.filter(e => !e.dentroRuta);
-        },
-        error => console.error('Error al cargar estaciones:', error)
-      );
-    }
+    this.loadingEstaciones$.next(true);
+    this.gestionarRutasService.obtenerEstaciones().subscribe(
+      (estaciones: REstacionRecibidaDto[]) => {
+        this.estacionesAsignadas = estaciones.filter(e => e.dentroRuta);
+        this.estacionesNoAsignadas = estaciones.filter(e => !e.dentroRuta);
+        this.loadingEstaciones$.next(false);
+        this.messageService.add({ severity: 'success', summary: 'Estaciones cargadas', detail: 'Las estaciones han sido cargadas.', life: 3000 });
+      },
+      error => {
+        this.loadingEstaciones$.next(false);
+        this.messageService.add({ severity: 'error', summary: 'Error al cargar estaciones', detail: error, life: 3000 });
+      }
+    );
   }
 
   onMoveToTarget(event: any) {
-    event.items.forEach((estacion: EstacionDTO) => {
-      estacion.dentroRuta = true;
-    });
+    this.actualizarOrdenEstaciones();
   }
 
   onMoveToSource(event: any) {
-    event.items.forEach((estacion: EstacionDTO) => {
+    this.actualizarOrdenEstaciones();
+  }
+
+  actualizarOrdenEstaciones() {
+    this.estacionesAsignadas.forEach((estacion, index) => {
+      estacion.orden = (index + 1).toString();
+      estacion.dentroRuta = true;
+    });
+
+    this.estacionesNoAsignadas.forEach(estacion => {
+      estacion.orden = '';
       estacion.dentroRuta = false;
     });
   }
@@ -112,34 +145,36 @@ export class RAgregarRutaComponent {
   actualizarHora() {
     this.ruta.horario.horaInicio = this.dateToString(this.horaInicioDate);
     this.ruta.horario.horaFin = this.dateToString(this.horaFinDate);
-    this.ruta.diasSemana = this.selectedDias;
+    this.ruta.diasSemana = this.selectedDias.map(dia => dia.value);
   }
 
-  saveChanges() {
+  createRute(event: Event) {
     if (this.ruta) {
-      this.actualizarHora();
-      this.ruta.estaciones = this.estacionesAsignadas;
-      this.gestionarRutasService.actualizarRuta(this.ruta).subscribe(
-        (rutaActualizada: RutaDto) => {
-          this.save.emit(rutaActualizada);
-        },
-        error => console.error('Error al actualizar la ruta:', error)
-      );
-    }
-  }
 
-  canDelete(): boolean {
-    return this.ruta ? (this.ruta.conductores.length === 0 && this.ruta.buses.length === 0) : false;
-  }
-
-  deleteRoute() {
-    if (this.canDelete() && this.ruta && this.ruta.id) {
-      this.gestionarRutasService.eliminarRuta(this.ruta.id).subscribe(
-        () => {
-          this.close.emit();
+      this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro de crear la ruta?',
+        header: 'Confirmación de guardado',
+        icon: 'pi pi-info-circle',
+        acceptButtonStyleClass:"p-button-danger p-button-text",
+        rejectButtonStyleClass:"p-button-text p-button-text",
+        acceptIcon:"none",
+        rejectIcon:"none",
+        accept : () => {
+          this.actualizarHora();
+          this.ruta.estaciones = this.estacionesAsignadas;
+          this.gestionarRutasService.crearRuta(this.ruta).subscribe(
+            (rutaActualizada: RRutaEnviadaDto) => {
+              this.save.emit(rutaActualizada);
+            },
+            error => this.messageService.add({severity: 'error', summary: 'Error al guardar los cambios', detail: error, life: 3000})
+          );
+          this.messageService.add({ severity: 'success', summary: 'Guardado exitoso', detail: 'Los cambios han sido guardados.', life: 3000 });
         },
-        error => console.error('Error al eliminar la ruta:', error)
-      );
+        reject: () => {
+          this.messageService.add({severity: 'error', summary: 'Guardado cancelado', detail: 'No se guardaron los cambios.',  life: 3000});
+        }
+      })
     }
   }
 

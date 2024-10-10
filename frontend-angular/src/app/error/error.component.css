@@ -1,3 +1,17 @@
+.principal {
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+  background-image: url("/assets/images/fondoTransmi.png");
+  backdrop-filter: brightness(0.5);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .container {
   text-align: center;
   background-color: #ffffff;

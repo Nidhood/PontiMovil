@@ -13,6 +13,7 @@
       <ng-lottie [options]="options" ></ng-lottie>
     </div>
 
+    <p-toast />
     <div *ngIf="!isLoading" class="grid">
 
       <!-- desplegamos las rutas -->
@@ -23,7 +24,7 @@
     </div>
 
     <!-- condición para opacar el fondo mientras se despliega un modal -->
-    <div *ngIf="selectedRuta || guiaVisible || editRuta" class="modal-backdrop" (click)="cerrarModal()"></div>
+    <div *ngIf="selectedRuta || guiaVisible || editRuta || agregarRuta" class="modal-backdrop" (click)="cerrarModal()"></div>
 
     <!-- desplegamos los detalles de la ruta seleccionada -->
     <app-r-detalles-ruta *ngIf="selectedRuta" [ruta]="selectedRuta" (close)="cerrarDetalles()" (edit)="editarRuta()"></app-r-detalles-ruta>

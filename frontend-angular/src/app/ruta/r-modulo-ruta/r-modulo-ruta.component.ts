@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {RutaDto} from '../../dto/gestionar-rutas/ruta/ruta-dto';
+import {RRutaRecibidaDto} from '../../dto/gestionar-rutas/ruta-recibida/r-ruta-recibida-dto';
 
 @Component({
   selector: 'app-r-modulo-ruta',
@@ -9,8 +9,8 @@ import {RutaDto} from '../../dto/gestionar-rutas/ruta/ruta-dto';
   styleUrl: './r-modulo-ruta.component.css'
 })
 export class RModuloRutaComponent {
-  @Input() ruta!: RutaDto;
-  @Output() rutaSelected = new EventEmitter<RutaDto>();
+  @Input() ruta!: RRutaRecibidaDto;
+  @Output() rutaSelected = new EventEmitter<RRutaRecibidaDto>();
 
   horaInicioDate: Date = new Date();
   horaFinDate: Date = new Date();

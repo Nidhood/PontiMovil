@@ -60,7 +60,13 @@
 .station-box {
   padding: 10px;
   border-bottom: 1px solid #ddd;
-  background-color: #ffffff;
+  background-color: #dc2626;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.station-box.skeleton {
+  background-color: #f9f9f9;
 }
 
 .action-buttons {
@@ -68,16 +74,4 @@
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
-}
-
-.p-button-success {
-  background-color: #4CAF50 !important;
-}
-
-.p-button-secondary {
-  background-color: #607D8B !important;
-}
-
-.p-button-danger {
-  background-color: #f44336 !important;
 }

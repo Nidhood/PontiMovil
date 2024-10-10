@@ -1,7 +1,7 @@
 package com.javeriana.pontimovil.ponti_movil.controllers;
 
 
-import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.estacion.EstacionDTO;
+import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.estacion.rEstacionDTO;
 import com.javeriana.pontimovil.ponti_movil.services.EstacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +26,13 @@ public class EstacionController {
     }
 
     // Métodos:
+    @GetMapping
+    public List<rEstacionDTO> obtenerEstaciones() {
+        return estacionService.obtenerEstaciones();
+    }
+
     @GetMapping("/{idRuta}")
-    public List<EstacionDTO> obtenerEstacionesPorRuta(@PathVariable UUID idRuta) {
+    public List<rEstacionDTO> obtenerEstacionesPorRuta(@PathVariable UUID idRuta) {
         return estacionService.obtenerEstacionesPorRuta(idRuta);
     }
 }

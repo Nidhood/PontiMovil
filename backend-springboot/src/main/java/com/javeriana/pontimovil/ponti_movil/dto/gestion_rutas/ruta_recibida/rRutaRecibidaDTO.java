@@ -1,4 +1,4 @@
-package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta;
+package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta_recibida;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +12,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
-public class RutaDTO implements Serializable {
+public class rRutaRecibidaDTO implements Serializable {
     UUID id;
     String codigo;
-    HorarioDTO horario;
+    rHorarioDTO horario;
     List<String> diasSemana;
-    List<EstacionDTO> estaciones;
-    List<BusDTO> buses;
-    List<ConductorDTO> conductores;
+    List<rEstacionRecibidaDTO> estaciones;
+    List<rBusDTO> buses;
+    List<rConductorDTO> conductores;
 }

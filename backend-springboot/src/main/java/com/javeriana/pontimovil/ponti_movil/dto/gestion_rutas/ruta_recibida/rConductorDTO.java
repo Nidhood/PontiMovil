@@ -1,4 +1,4 @@
-package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta;
+package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta_recibida;
 
 import lombok.*;
 import java.io.Serializable;
@@ -8,7 +8,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
-public class ConductorDTO implements Serializable {
+public class rConductorDTO implements Serializable {
     String nombre;
     String apellido;
 }

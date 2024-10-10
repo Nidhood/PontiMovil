@@ -1,10 +1,9 @@
 package com.javeriana.pontimovil.ponti_movil.services;
 
 
-import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.estacion.DireccionDTO;
-import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.estacion.EstacionDTO;
+import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.estacion.rDireccionDTO;
+import com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.estacion.rEstacionDTO;
 import com.javeriana.pontimovil.ponti_movil.entities.Estacion;
-import com.javeriana.pontimovil.ponti_movil.entities.RutaEstacion;
 import com.javeriana.pontimovil.ponti_movil.repositories.EstacionRepository;
 import com.javeriana.pontimovil.ponti_movil.repositories.RutaEstacionRepository;
 import org.springframework.stereotype.Service;
@@ -27,9 +26,9 @@ public class EstacionService {
     }
 
     // Métodos:
-    public List<EstacionDTO> obtenerEstacionesPorRuta(UUID idRuta) {
+    public List<rEstacionDTO> obtenerEstaciones() {
 
-        List<EstacionDTO> estaciones = new ArrayList<>();
+        List<rEstacionDTO> estaciones = new ArrayList<>();
 
         // Obtenemos todas las estaciones:
         List<Estacion> estacionesList = estacionRepository.findAll();
@@ -38,12 +37,44 @@ public class EstacionService {
         for(Estacion estacion : estacionesList) {
 
             // Crear DTO:
-            EstacionDTO estacionDTO = new EstacionDTO();
+            rEstacionDTO estacionDTO = new rEstacionDTO();
             estacionDTO.setId(estacion.getId());
             estacionDTO.setNombre(estacion.getNombre());
 
             // Crear direccionDTO:
-            DireccionDTO direccionDTO = new DireccionDTO();
+            rDireccionDTO direccionDTO = new rDireccionDTO();
+            direccionDTO.setTipoVia(estacion.getDireccion().getTipoVia());
+            direccionDTO.setNumeroVia(estacion.getDireccion().getNumeroVia());
+            direccionDTO.setNumero(estacion.getDireccion().getNumero());
+            direccionDTO.setLocalidad(estacion.getDireccion().getLocalidad());
+            direccionDTO.setBarrio(estacion.getDireccion().getBarrio());
+            estacionDTO.setDireccion(direccionDTO);
+
+            // Agregar a la lista:
+            estaciones.add(estacionDTO);
+        }
+
+        // Retornar lista de estaciones:
+        return estaciones;
+    }
+
+
+    public List<rEstacionDTO> obtenerEstacionesPorRuta(UUID idRuta) {
+        List<rEstacionDTO> estaciones = new ArrayList<>();
+
+        // Obtenemos todas las estaciones:
+        List<Estacion> estacionesList = estacionRepository.findAll();
+
+        // Crear DTO para cada estación:
+        for(Estacion estacion : estacionesList) {
+
+            // Crear DTO:
+            rEstacionDTO estacionDTO = new rEstacionDTO();
+            estacionDTO.setId(estacion.getId());
+            estacionDTO.setNombre(estacion.getNombre());
+
+            // Crear direccionDTO:
+            rDireccionDTO direccionDTO = new rDireccionDTO();
             direccionDTO.setTipoVia(estacion.getDireccion().getTipoVia());
             direccionDTO.setNumeroVia(estacion.getDireccion().getNumeroVia());
             direccionDTO.setNumero(estacion.getDireccion().getNumero());
@@ -53,6 +84,9 @@ public class EstacionService {
 
             // Verificar si la estación pertenece a la ruta:
             estacionDTO.setDentroRuta(rutaEstacionRepository.existsByRutaIdAndEstacionId(idRuta, estacion.getId()));
+
+            // Colocar orden:
+            estacionDTO.setOrden(rutaEstacionRepository.findOrdenByRutaIdAndEstacionId(idRuta, estacion.getId()));
 
             // Agregar a la lista:
             estaciones.add(estacionDTO);

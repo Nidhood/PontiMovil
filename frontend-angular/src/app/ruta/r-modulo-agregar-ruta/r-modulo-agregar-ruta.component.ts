@@ -8,8 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './r-modulo-agregar-ruta.component.css'
 })
 export class RModuloAgregarRutaComponent {
-
-  abrirFormulario() {
-    // Lógica para abrir el formulario/modal
-  }
 }

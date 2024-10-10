@@ -30,7 +30,6 @@ export class RDetallesRutaComponent {
   @Input() ruta: any;
   @Output() close = new EventEmitter<void>();
   @Output() edit = new EventEmitter<void>();
-  hover: boolean = false;
   horaInicioDate: Date = new Date();
   horaFinDate: Date = new Date();
 

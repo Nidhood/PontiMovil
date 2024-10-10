@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {BehaviorSubject, finalize, map, Observable} from 'rxjs';
-import {RutaDto} from '../../dto/gestionar-rutas/ruta/ruta-dto';
+import {RRutaRecibidaDto} from '../../dto/gestionar-rutas/ruta-recibida/r-ruta-recibida-dto';
 import {GestionarRutasService} from '../../share/gestionar-rutas.service';
 import {AsyncPipe, NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
@@ -11,6 +11,10 @@ import {REditarRutaComponent} from '../r-editar-ruta/r-editar-ruta.component';
 import {Button} from 'primeng/button';
 import {RAgregarRutaComponent} from '../r-agregar-ruta/r-agregar-ruta.component';
 import {RModuloAgregarRutaComponent} from '../r-modulo-agregar-ruta/r-modulo-agregar-ruta.component';
+import {ToastModule} from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
+import {RRutaEnviadaDto} from '../../dto/gestionar-rutas/ruta-enviada/r-ruta-enviada-dto';
 
 @Component({
   selector: 'app-r-menu',
@@ -27,22 +31,27 @@ import {RModuloAgregarRutaComponent} from '../r-modulo-agregar-ruta/r-modulo-agr
     REditarRutaComponent,
     Button,
     RAgregarRutaComponent,
-    RModuloAgregarRutaComponent
+    RModuloAgregarRutaComponent,
+    ToastModule
   ],
   templateUrl: './r-menu.component.html',
-  styleUrl: './r-menu.component.css'
+  styleUrl: './r-menu.component.css',
+  providers: [MessageService, ConfirmationService]
 })
 
 export class RMenuComponent {
-  private rutasSubject = new BehaviorSubject<RutaDto[]>([]);
-  rutas$: Observable<RutaDto[]> = this.rutasSubject.asObservable();
-  selectedRuta: RutaDto | null = null;
-  editRuta: RutaDto | null = null;
+  private rutasSubject = new BehaviorSubject<RRutaRecibidaDto[]>([]);
+  rutas$: Observable<RRutaRecibidaDto[]> = this.rutasSubject.asObservable();
+  selectedRuta: RRutaRecibidaDto | null = null;
+  editRuta: RRutaRecibidaDto | null = null;
   agregarRuta = false;
   guiaVisible = false;
   isLoading = true;
 
-  constructor(private gestionarRutasService: GestionarRutasService) {}
+  constructor(
+    private gestionarRutasService: GestionarRutasService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.cargarRutas();
@@ -59,7 +68,7 @@ export class RMenuComponent {
     );
   }
 
-  seleccionarRuta(ruta: RutaDto) {
+  seleccionarRuta(ruta: RRutaRecibidaDto) {
     this.selectedRuta = ruta;
   }
 
@@ -99,32 +108,34 @@ export class RMenuComponent {
     this.gestionarRutasService.listaRutas().pipe(
       finalize(() => this.isLoading = false)
     ).subscribe(
-      (rutas: RutaDto[]) => {
+      (rutas: RRutaRecibidaDto[]) => {
         this.rutasSubject.next(rutas);
+        this.messageService.add({severity: 'success', summary: 'Rutas cargadas', detail: 'Las rutas se han cargado correctamente'});
+
       },
       error => {
-        console.error('Error al cargar rutas:', error);
+        this.messageService.add({severity: 'error', summary: 'Error al cargar rutas', detail: error});
       }
     );
   }
 
-  guardarCambiosRuta(rutaActualizada: RutaDto) {
-    this.gestionarRutasService.actualizarRuta(rutaActualizada).subscribe(
-      () => {
-        this.cargarRutas();
-        this.cerrarEditar();
-      },
-      error => console.error('Error al guardar cambios:', error)
-    );
-  }
-
-  guardarNuevaRuta(rutaNueva: RutaDto) {
-    this.gestionarRutasService.crearRuta(rutaNueva).subscribe(
+  guardarNuevaRuta($event: RRutaEnviadaDto) {
+    this.gestionarRutasService.crearRuta($event).subscribe(
       () => {
         this.cargarRutas();
         this.cerrarAgregar();
       },
       error => console.error('Error al guardar la nueva ruta:', error)
+    );
+  }
+
+  guardarCambiosRuta($event: RRutaEnviadaDto) {
+    this.gestionarRutasService.actualizarRuta($event).subscribe(
+      () => {
+        this.cargarRutas();
+        this.cerrarEditar();
+      },
+      error => console.error('Error al actualizar la ruta:', error)
     );
   }
 

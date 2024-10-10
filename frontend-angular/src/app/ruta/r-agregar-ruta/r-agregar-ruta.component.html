@@ -35,7 +35,7 @@
       <div class="time-field">
         <label for="dias">Días</label>
         <div>
-          <p-multiSelect id="dias" [options]="diasOptions" [(ngModel)]="selectedDias" optionLabel="days" placeholder="Dias seleccionados"/>
+          <p-multiSelect id="dias" [options]="diasOptions" optionLabel="nombre" [(ngModel)]="selectedDias"  placeholder="Dias seleccionados" [showHeader]="false" [filter]="false" [style]="{'width': '225px'}"/>
         </div>
         <small id="time-days-help">Seleccione los dias de la ruta.</small>
       </div>
@@ -43,31 +43,49 @@
   </div>
 
   <div class="stations-container">
-    <div class="station-list station-list-container">
+    <div class="station-list station-list-container" [ngStyle]="{ '.p-button': {background: '#dc2626'}}">
       <p-pickList
-        [source]="estacionesNoAsignadas"
-        [target]="estacionesAsignadas"
+        class="custom-picklist"
+        [source]="(loadingEstaciones$ | async) ? skeletonItems : estacionesNoAsignadas"
+        [target]="(loadingEstaciones$ | async)? skeletonItems : estacionesAsignadas"
         sourceHeader="Estaciones No Asignadas"
         targetHeader="Estaciones Asignadas"
         [dragdrop]="true"
         [responsive]="true"
         [sourceStyle]="{ height: '290px' }"
         [targetStyle]="{ height: '290px' }"
+        [style]="{  '.p-button':{ background: '#dc2626'} }"
         (onMoveToTarget)="onMoveToTarget($event)"
         (onMoveToSource)="onMoveToSource($event)"
         breakpoint="1400px">
+        <p-toast />
         <ng-template let-estacion pTemplate="item">
-          <div class="station-box">
-            <app-r-modulo-estacion [estacion]="estacion"></app-r-modulo-estacion>
-          </div>
+          <ng-container *ngIf="loadingEstaciones$ | async as isLoading; else stationsTemplate">
+            <div *ngIf="isLoading" class="station-box skeleton">
+              <p-skeleton width="100%" height="20px" styleClass="mb-2" [style]=" {'margin-bottom': '5px' }"></p-skeleton>
+              <p-skeleton width="100%" height="20px" styleClass="mb-2" [style]=" {'margin-bottom': '5px' }"></p-skeleton>
+              <p-skeleton width="100%" height="20px" styleClass="mb-2"></p-skeleton>
+            </div>
+          </ng-container>
+
+          <ng-template #stationsTemplate>
+            <div class="station-box">
+              <app-r-modulo-estacion [estacion]="estacion"></app-r-modulo-estacion>
+            </div>
+          </ng-template>
+
         </ng-template>
       </p-pickList>
     </div>
   </div>
 
+
   <div class="action-buttons">
-    <p-button label="Guardar" class="p-button-success" (onClick)="saveChanges()"></p-button>
-    <p-button label="Cancelar" class="p-button-secondary" (onClick)="closeEdit()"></p-button>
-    <p-button label="Eliminar" class="p-button-danger" *ngIf="canDelete()" (onClick)="deleteRoute()"></p-button>
+
+    <p-toast />
+    <p-confirmDialog />
+    <p-button label="Crear" severity="success" (onClick)="createRute($event)" [outlined]="true"></p-button>
+    <p-button label="Cancelar" severity="secondary" class="p-button-secondary" (onClick)="closeEdit()" [outlined]="true"></p-button>
+
   </div>
 </div>

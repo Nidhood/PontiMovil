@@ -1,4 +1,4 @@
-package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.estacion;
+package com.javeriana.pontimovil.ponti_movil.dto.gestion_rutas.ruta_recibida;
 
 import lombok.*;
 import java.io.Serializable;
@@ -9,9 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
-public class EstacionDTO implements Serializable {
+public class rEstacionRecibidaDTO implements Serializable {
     UUID id;
     String nombre;
-    DireccionDTO direccion;
-    Boolean dentroRuta;
 }
